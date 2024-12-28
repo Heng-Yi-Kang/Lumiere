@@ -98,14 +98,17 @@ public class Lumiere
     
     public static void sortTasks(List<Task> tasks) {
     Scanner input = new Scanner(System.in);
+    
+    String sortTask = """
+                      === Sort Tasks ===
+                        Sort by:
+                        1. Due Date (Ascending)
+                        2. Due Date (Descending)
+                        3. Priority (High to Low)
+                        4. Priority (Low to High)
+                        >       """;
 
-    System.out.println("=== Sort Tasks ===");
-    System.out.println("Sort by:");
-    System.out.println("1. Due Date (Ascending)");
-    System.out.println("2. Due Date (Descending)");
-    System.out.println("3. Priority (High to Low)");
-    System.out.println("4. Priority (Low to High)");
-    System.out.print("> ");
+    System.out.print(sortTask);
 
     int choice = input.nextInt();
 
