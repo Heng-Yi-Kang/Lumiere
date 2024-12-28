@@ -86,21 +86,61 @@ public class Lumiere
     
     // sample viewTasks(), print out a list of tasks
     public static void viewTasks(List<Task> tasks)
-    {
-        for (int i = 0; i < tasks.size(); i++)
-        {
-            Task task = tasks.get(i);
-            System.out.printf("%d: %s [%s]\n", i+1, task.title, 
-                        (task.status)?"completed":"incomplete");
-        }     
+     { System.out.println("=== Task List ===");
+    for (int i = 0; i < tasks.size(); i++) {
+        Task task = tasks.get(i);
+        System.out.printf("%d: %s [%s] (Due: %s, Priority: %s)\n", 
+                          i + 1, task.title, 
+                          (task.status ? "completed" : "incomplete"), 
+                          task.due_date, task.priority);
     }
+}
     
+    public static void sortTasks(List<Task> tasks) {
+    Scanner input = new Scanner(System.in);
+
+    System.out.println("=== Sort Tasks ===");
+    System.out.println("Sort by:");
+    System.out.println("1. Due Date (Ascending)");
+    System.out.println("2. Due Date (Descending)");
+    System.out.println("3. Priority (High to Low)");
+    System.out.println("4. Priority (Low to High)");
+    System.out.print("> ");
+
+    int choice = input.nextInt();
+
+    switch (choice) {
+        case 1:
+            tasks.sort(Comparator.comparing(t -> t.due_date));
+            System.out.println("Tasks sorted by Due Date (Ascending)!");
+            break;
+        case 2:
+            tasks.sort((t1, t2) -> t2.due_date.compareTo(t1.due_date));
+            System.out.println("Tasks sorted by Due Date (Descending)!");
+            break;
+        case 3:
+            tasks.sort((t1, t2) -> t2.priority.compareTo(t1.priority));
+            System.out.println("Tasks sorted by Priority (High to Low)!");
+            break;
+        case 4:
+            tasks.sort(Comparator.comparing(t -> t.priority));
+            System.out.println("Tasks sorted by Priority (Low to High)!");
+            break;
+        default:
+            System.out.println("Invalid option. No sorting applied.");
+            return;
+            
+    }
+    viewTasks(tasks);
+    }
     
     public static void main(String[] args) 
     {
         List<Task> tasks = getTasks();
         viewTasks(tasks);
-        
+        System.out.println("");
+        sortTasks(tasks);
+    
         // menu goes here: 
         // will be written at last after all methods are ready
    
