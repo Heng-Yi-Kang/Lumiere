@@ -1,6 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 
 package com.mycompany.lumiere_maven;
 
@@ -9,10 +6,6 @@ import java.util.*;
 import com.opencsv.*;
 import java.util.Scanner;
 
-/**
- *
- * @author arch_kang
- */
 public class Lumiere 
 {
     private static final String file_path = "./resource/tasks.csv";
@@ -63,14 +56,14 @@ public class Lumiere
             {
                 String [] data = 
                 {
-                    task.title, 
-                    task.description, 
-                    task.due_date, 
-                    task.category, 
-                    task.priority, 
-                    Boolean.toString(task.status),
-                    task.depends_on,
-                    task.repeat
+                    task.getTitle(), 
+                    task.getDescription(), 
+                    task.getDueDate(), 
+                    task.getCategory(), 
+                    task.getPriority(), 
+                    Boolean.toString(task.getStatus()),
+                    task.getDepends(),
+                    task.getRepeat()
                 };
                 writer.writeNext(data);
             }
@@ -90,8 +83,8 @@ public class Lumiere
         for (int i = 0; i < tasks.size(); i++)
         {
             Task task = tasks.get(i);
-            System.out.printf("%d: %s [%s]\n", i+1, task.title, 
-                        (task.status)?"completed":"incomplete");
+            System.out.printf("%d: %s [%s]\n", i+1, task.getTitle(), 
+                        (task.getStatus())?"completed":"incomplete");
         }     
     }
     
