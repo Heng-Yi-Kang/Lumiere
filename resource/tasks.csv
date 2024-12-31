@@ -1,2 +1,6 @@
-"buy groceries","buy food for a week","2024-11-30","personal","low","true","",""
-"plan project","save the world project","2024-12-30","work","medium","true","",""
+"buy groceries","buy food for a week","2024-11-30","personal","low","false","","weekly"
+"plan project","save the world project","2024-12-30","homework","medium","true","",""
+"OOP","learn more about OOP for project","2024-12-30","homework","high","false","",""
+"submit assignment","a report of FOP group assignment","2025-1-7","homework","high","false","OOP",""
+"Fishing","Sunday plan with friends","2025-1-5","personal","low","false","","weekly"
+"jog","jog around UM to keep fit","2025-1-1","personal","medium","false","","daily"

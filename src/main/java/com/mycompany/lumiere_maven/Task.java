@@ -3,9 +3,9 @@ package com.mycompany.lumiere_maven;
 
 public class Task 
 {
-    public String title, description, due_date, category, priority, depends_on, 
+    private String title, description, due_date, category, priority, depends_on, 
             repeat;
-    public boolean status;
+    private boolean status;
     
     // due_date(YYYY-MM-DD)
     // category: homework, personal, work
@@ -28,4 +28,27 @@ public class Task
         this.repeat = repeat;
     }
     
+    public String getTitle() { return this.title; }
+    public void setTitle(String title) { this.title = title; }
+    
+    public String getDescription() { return this.description; }
+    public void setDescription(String des) { this.description = des; }
+    
+    public String getDueDate() { return this.due_date; }
+    public void setDueDate(String date) { this.due_date = date; }
+    
+    public String getCategory() { return this.category; }
+    public void setCategory(String category) { this.category = category; }
+    
+    public String getPriority() { return this.priority; }
+    public void setPriority(String priority) { this.priority = priority; }
+    
+    public boolean getStatus() { return this.status; }
+    public void setStatus(boolean status) { this.status = status; }
+            
+    public String getDepends() { return this.depends_on; }
+    public void setDepends(String depends_on) { this.depends_on = depends_on; }
+    
+    public String getRepeat() { return this.repeat; }
+    public void setRepeat(String repeat) { this.repeat = repeat; }
 }
