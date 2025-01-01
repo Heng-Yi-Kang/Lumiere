@@ -1,10 +1,16 @@
 
 package com.mycompany.lumiere_maven;
 
-import java.io.*;
-import java.util.*;
-import com.opencsv.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 public class Lumiere 
 {
@@ -27,10 +33,9 @@ public class Lumiere
             {
                 Task task = new Task(nextRow[0], nextRow[1], nextRow[2], 
                         nextRow[3], nextRow[4], Boolean.parseBoolean(nextRow[5]),
-                        nextRow[6], nextRow[7]);
+                        nextRow[6], nextRow[7], nextRow[8]);
                 tasks.add(task);
             }
-          
         }
         
         catch (Exception e)
@@ -94,6 +99,8 @@ public class Lumiere
         List<Task> tasks = getTasks();
         viewTasks(tasks);
         
+        email a = new email();
+        a.checkDeadlines(tasks);
         // menu goes here: 
         // will be written at last after all methods are ready
    

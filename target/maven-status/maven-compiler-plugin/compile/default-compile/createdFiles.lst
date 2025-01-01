@@ -1,2 +1,4 @@
-com/mycompany/lumiere_maven/Task.class
-com/mycompany/lumiere_maven/Lumiere.class
+com\mycompany\lumiere_maven\Task.class
+com\mycompany\lumiere_maven\email.class
+com\mycompany\lumiere_maven\Lumiere.class
+com\mycompany\lumiere_maven\email$1.class
