@@ -14,7 +14,7 @@ public class Dependency {
         if (task == current){
             return true;
         }
-        for (Task dependency : task.getDependencies()){
+        for (Task dependency : task.getDependsOn()){
             if (isDependencyCycle(dependency, current)){
                 return true;
             }
@@ -35,6 +35,11 @@ public class Dependency {
 
         Task dependentTask = tasks.get(dependentTaskNumber - 1);
         Task dependencyTask = tasks.get(dependencyTaskNumber - 1);
+
+        if (isDependencyCycle(dependencyTask, dependentTask)) {
+            System.out.println("Error: Adding this dependency creates a cycle.");
+            return;
+        }
 
         if (dependentTask == dependencyTask) {
             System.out.println("Error: A task cannot depend on itself.");
