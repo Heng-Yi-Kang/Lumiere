@@ -5,7 +5,7 @@ public class Task
 {
     private String title, description, due_date, category, priority, depends_on, 
             repeat, email;
-    private boolean status;
+    boolean status;
     
     // due_date(YYYY-MM-DD)
     // category: homework, personal, work
