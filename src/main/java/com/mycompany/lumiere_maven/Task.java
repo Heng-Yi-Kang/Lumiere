@@ -16,7 +16,7 @@ public class Task
     
     public Task(String title, String description, String due_date, 
             String category, String priority, boolean status, String dependency, 
-            String repeat, String email)
+            String repeat)
     {
         this.title = title;
         this.description = description;
@@ -26,7 +26,6 @@ public class Task
         this.status = status;
         this.depends_on = dependency;
         this.repeat = repeat;
-        this.email = email;
     }
 
     private String preprocessDate(String date){
@@ -59,7 +58,4 @@ public class Task
     
     public String getRepeat() { return this.repeat; }
     public void setRepeat(String repeat) { this.repeat = repeat; }
-
-    public String getEmail(){return this.email;}
-    public void setEmail(String email){this.email = email;} 
 }

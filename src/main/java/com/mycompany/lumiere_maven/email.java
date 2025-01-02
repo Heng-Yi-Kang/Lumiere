@@ -20,6 +20,14 @@ public class email{
     private static final String EMAIL_USER = "jiakangkhe@gmail.com";
     private static final String EMAIL_PASSWORD = "efar orgq vzym lcjq";
     private static final String SENDER_EMAIL = "jiakangkhe@gmail.com";
+    private static final String RECEIVEREMAIL = "khejiawei@gmail.com";
+
+    private String preprocessDate(String date){
+        if(date.matches("\\d{4}-\\d{1,2}-\\d{1,2}")){
+            return date + " 00:00:00";
+        }
+        return date;
+    }
 
     //Send email
     private void sendEmail(String toEmail, String subject, String body){
@@ -60,7 +68,7 @@ public class email{
             if(hoursUntilDeadline > 0 && hoursUntilDeadline <= 24){
                 String subject = "Reminder: Task '" + task.getTitle() + "' is due soon!";
                 String body = "Task: " + task.getTitle() + "\n" + "Description: " + task.getDescription() + "\n" + "Deadline: " + task.getDueDate() + "\n" + "Please complete it before the deadline!";
-                sendEmail(task.getEmail(), subject, body);
+                sendEmail(RECEIVEREMAIL, subject, body);
             }
         }
 

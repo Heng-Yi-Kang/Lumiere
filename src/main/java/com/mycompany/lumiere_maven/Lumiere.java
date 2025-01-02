@@ -33,7 +33,7 @@ public class Lumiere
             {
                 Task task = new Task(nextRow[0], nextRow[1], nextRow[2], 
                         nextRow[3], nextRow[4], Boolean.parseBoolean(nextRow[5]),
-                        nextRow[6], nextRow[7], nextRow[8]);
+                        nextRow[6], nextRow[7]);
                 tasks.add(task);
             }
         }
