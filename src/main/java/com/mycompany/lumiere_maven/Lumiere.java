@@ -4,7 +4,6 @@ package com.mycompany.lumiere_maven;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -12,6 +11,7 @@ import java.io.IOException;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import java.util.Comparator;
 
 public class Lumiere 
 {
@@ -85,23 +85,85 @@ public class Lumiere
         }
     }
     
-    
     // sample viewTasks(), print out a list of tasks
-    public static void viewTasks(List<Task> tasks)
-    {
-        for (int i = 0; i < tasks.size(); i++)
-        {
-            Task task = tasks.get(i);
-            System.out.printf("%d: %s [%s]\n", i+1, task.getTitle(), 
-                        (task.getStatus())?"completed":"incomplete");
-        }     
+    public static void viewTasks(List<Task> tasks) {
+    System.out.println("=== Task List ===");
+    System.out.printf("%-4s %-25s %-12s %-12s %-15s %-20s\n", "No.", "Title", "Status", "Due Date", "Priority", "Category");
+    System.out.println("===========================================================================================");
+    
+    for (int i = 0; i < tasks.size(); i++) {
+        Task task = tasks.get(i);
+        String dueDate = task.getDueDate().split(" ")[0]; 
+        
+        System.out.printf("%-4d %-25s %-12s %-12s %-15s %-20s\n",
+                i + 1,
+                task.getTitle(),
+                task.status ? "Completed" : "Incomplete",
+                dueDate,
+                task.getPriority(),
+                task.getCategory());
     }
     
+    System.out.println("===========================================================================================");
+}
+    
+    public static void sortTasks(List<Task> tasks) {
+    System.out.println("=== Sort Tasks ===");
+    System.out.println("Sort by:");
+    System.out.println("1. Due Date (Ascending)");
+    System.out.println("2. Due Date (Descending)");
+    System.out.println("3. Priority (High to Low)");
+    System.out.println("4. Priority (Low to High)");
+    System.out.print("> ");
+
+    int choice = input.nextInt();
+    input.nextLine(); 
+
+    switch (choice) {
+        case 1:
+            tasks.sort(Comparator.comparing(Task::getDueDate));
+            System.out.println("Tasks sorted by Due Date (Ascending)!");
+            break;
+        case 2:
+            tasks.sort(Comparator.comparing(Task::getDueDate).reversed());
+            System.out.println("Tasks sorted by Due Date (Descending)!");
+            break;
+        case 3:
+        case 4:
+            tasks.sort((task1, task2) -> {
+                int priority1 = getPriorityValue(task1.getPriority());
+                int priority2 = getPriorityValue(task2.getPriority());
+                return choice == 3 ? Integer.compare(priority2, priority1) // High to Low
+                                   : Integer.compare(priority1, priority2); // Low to High
+            });
+            System.out.println("Tasks sorted by Priority (" + (choice == 3 ? "High to Low" : "Low to High") + ")!");
+            break;
+        default:
+            System.out.println("Invalid choice. No sorting applied.");
+            return;
+    }
+    System.out.println("");
+    viewTasks(tasks);}
+    
+    private static int getPriorityValue(String priority) {
+    switch (priority.toLowerCase()) {
+        case "high":
+            return 3;
+        case "medium":
+            return 2;
+        case "low":
+            return 1;
+        default:
+            return 0;
+    }
+}
     
     public static void main(String[] args) 
     {
         List<Task> tasks = getTasks();
         viewTasks(tasks);
+        System.out.println("");
+        sortTasks(tasks);
         
 
         // vector search:
