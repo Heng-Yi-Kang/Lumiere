@@ -1,11 +1,17 @@
 
 package com.mycompany.lumiere_maven;
 
-import java.io.*;
-import java.util.*;
-import com.opencsv.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.io.IOException;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 public class Lumiere 
 {
@@ -31,7 +37,9 @@ public class Lumiere
                         nextRow[6], nextRow[7]);
                 tasks.add(task);
             }
+
             reader.close();
+
         }
         
         catch (Exception e)
@@ -95,6 +103,7 @@ public class Lumiere
         List<Task> tasks = getTasks();
         viewTasks(tasks);
         
+
         // vector search:
 //        String query;
 //        try
@@ -106,7 +115,7 @@ public class Lumiere
 //        }
 //        
 //        catch(Exception e){e.printStackTrace();}
-        
+
         // menu goes here: 
         // will be written at last after all methods are ready
    
