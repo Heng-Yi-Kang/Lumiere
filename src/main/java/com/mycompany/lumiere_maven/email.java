@@ -14,29 +14,45 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import java.io.FileInputStream;
+import java.util.Properties;
+import java.util.Scanner;
+import java.io.IOException;
+
 public class email{
     private static final String EMAIL_HOST = "smtp.gmail.com";
     private static final int EMAIL_PORT = 587;
     private static final String EMAIL_USER = "jiakangkhe@gmail.com";
     private static final String EMAIL_PASSWORD = "efar orgq vzym lcjq";
-    private static final String SENDER_EMAIL = "jiakangkhe@gmail.com";
-    private static final String RECEIVEREMAIL = "khejiawei@gmail.com";
+    
 
-    private String preprocessDate(String date){
+    private static String preprocessDate(String date){
         if(date.matches("\\d{4}-\\d{1,2}-\\d{1,2}")){
             return date + " 00:00:00";
         }
         return date;
     }
-
+    
+    private static String loadEmail(){
+        Properties prop = new Properties();
+        String email = "";
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+            email = prop.getProperty("email");
+        }
+        catch(Exception e){System.out.println("Error with loading email: " + e.getMessage());}
+        return email;
+    }
+        
     //Send email
-    private void sendEmail(String toEmail, String subject, String body){
+    private static void sendEmail(String subject, String body){
         java.util.Properties props = new java.util.Properties();
         props.put("mail.smtp.host", EMAIL_HOST);
         props.put("mail.smtp.port", EMAIL_PORT);
         props.put("mail.smtp.auth", "true");
         props.put("mail.smtp.starttls.enable", "true");
-
+        
+        String toEmail = loadEmail();
         Session session = Session.getInstance(props, new Authenticator(){
             @Override
             protected PasswordAuthentication getPasswordAuthentication(){
@@ -46,7 +62,7 @@ public class email{
 
         try{
             Message message = new MimeMessage(session);
-            message.setFrom(new InternetAddress(SENDER_EMAIL));
+            message.setFrom(new InternetAddress(EMAIL_USER));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
             message.setSubject(subject);
             message.setText(body);
@@ -57,18 +73,33 @@ public class email{
         }
     }
 
-    public void checkDeadlines(List<Task> tasks){
+    public static void checkDeadlines(List<Task> tasks){
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
-
+        
         for(Task task: tasks){
-            LocalDateTime deadline = LocalDateTime.parse(task.getDueDate(), formatter);
+            String date = preprocessDate(task.getDueDate());
+            LocalDateTime deadline = LocalDateTime.parse(date, formatter);
             long hoursUntilDeadline = ChronoUnit.HOURS.between(now,deadline);
 
             if(hoursUntilDeadline > 0 && hoursUntilDeadline <= 24){
                 String subject = "Reminder: Task '" + task.getTitle() + "' is due soon!";
-                String body = "Task: " + task.getTitle() + "\n" + "Description: " + task.getDescription() + "\n" + "Deadline: " + task.getDueDate() + "\n" + "Please complete it before the deadline!";
-                sendEmail(RECEIVEREMAIL, subject, body);
+//                String body = "Task: " + task.getTitle() + "\n" + "Description: " + task.getDescription() + "\n" + "Deadline: " + task.getDueDate() + "\n" + "Please complete it before the deadline!";
+                String body = "";
+                try{
+                    FileInputStream input = new FileInputStream("resource/message.txt");
+                    Scanner writer = new Scanner(input);
+                    body = writer.nextLine().replace("[User's Name]", "Alex");
+                    while(writer.hasNext()){
+                        body += String.format("%s\n", writer.nextLine());
+                        body = body.replace("[Task Name]", task.getTitle());
+                        body = body.replace("[Due Date]", task.getDueDate());
+                    }
+                    writer.close();
+                } catch (IOException e){
+                    System.out.println(e.getMessage());
+                }
+                sendEmail(subject, body);
             }
         }
 

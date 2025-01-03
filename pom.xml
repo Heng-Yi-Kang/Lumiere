@@ -11,14 +11,12 @@
     </properties>
 
     <dependencies>
-        <!-- OpenCSV for CSV file handling -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.9</version>
         </dependency>
 
-        <!-- JavaMail for sending emails -->
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>javax.mail</artifactId>

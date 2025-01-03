@@ -102,7 +102,7 @@ public class Lumiere
     {
         List<Task> tasks = getTasks();
         viewTasks(tasks);
-        
+//        email.checkDeadlines(tasks);
 
         // vector search:
 //        String query;

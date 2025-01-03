@@ -4,7 +4,7 @@ package com.mycompany.lumiere_maven;
 public class Task 
 {
     private String title, description, due_date, category, priority, depends_on, 
-            repeat, email;
+            repeat;
     private boolean status;
     
     // due_date(YYYY-MM-DD)
@@ -20,7 +20,7 @@ public class Task
     {
         this.title = title;
         this.description = description;
-        this.due_date = preprocessDate(due_date);
+        this.due_date = due_date;
         this.category = category;
         this.priority = priority;
         this.status = status;
@@ -28,12 +28,6 @@ public class Task
         this.repeat = repeat;
     }
 
-    private String preprocessDate(String date){
-        if(date.matches("\\d{4}-\\d{1,2}-\\d{1,2}")){
-            return date + " 00:00:00";
-        }
-        return date;
-    }
     
     public String getTitle() { return this.title; }
     public void setTitle(String title) { this.title = title; }
@@ -42,7 +36,7 @@ public class Task
     public void setDescription(String des) { this.description = des; }
     
     public String getDueDate() { return this.due_date; }
-    public void setDueDate(String date) { this.due_date = preprocessDate(date); }
+    public void setDueDate(String date) { this.due_date = date; }
     
     public String getCategory() { return this.category; }
     public void setCategory(String category) { this.category = category; }
