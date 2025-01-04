@@ -1,10 +1,17 @@
 
 package com.mycompany.lumiere_maven;
 
-import java.io.*;
-import java.util.*;
-import com.opencsv.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.io.IOException;
+
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
 
 public class Lumiere 
 {
@@ -20,17 +27,19 @@ public class Lumiere
         try 
         {
             FileReader filereader = new FileReader(file_path);
-            CSVReader csvReader = new CSVReader(filereader);
+            CSVReader reader = new CSVReader(filereader);
             
             String [] nextRow;
-            while ((nextRow = csvReader.readNext()) != null)
+            while ((nextRow = reader.readNext()) != null)
             {
                 Task task = new Task(nextRow[0], nextRow[1], nextRow[2], 
                         nextRow[3], nextRow[4], Boolean.parseBoolean(nextRow[5]),
                         nextRow[6], nextRow[7]);
                 tasks.add(task);
             }
-          
+
+            reader.close();
+
         }
         
         catch (Exception e)
@@ -93,7 +102,20 @@ public class Lumiere
     {
         List<Task> tasks = getTasks();
         viewTasks(tasks);
-        
+//        email.checkDeadlines(tasks);
+
+        // vector search:
+//        String query;
+//        try
+//        {
+//            System.out.print("Search by keyword: ");
+//            Scanner input = new Scanner(System.in);
+//            query = input.nextLine();
+//            searchEngine.embedding(query, tasks);
+//        }
+//        
+//        catch(Exception e){e.printStackTrace();}
+
         // menu goes here: 
         // will be written at last after all methods are ready
    
