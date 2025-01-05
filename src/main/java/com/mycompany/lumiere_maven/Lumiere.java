@@ -138,37 +138,7 @@ public class Lumiere
                 
             }
         }
-        
-        
-        
-        
-//        viewTasks(tasks);
-//        sort.sortTasks(tasks, input);
-        
-//        addtask.createTask(tasks);
-//        viewTasks(tasks);
-//        System.out.print("Enter task no. to edit: ");
-//        int n = input.nextInt();
-//        EditTask.editTask(tasks, n, input);
-//        viewTasks(tasks);
-//        saveTasks(tasks);
-//        email.checkDeadlines(tasks);
-
-        // vector search:
-//        String query;
-//        try
-//        {
-//            System.out.print("Search by keyword: ");
-//            Scanner input = new Scanner(System.in);
-//            query = input.nextLine();
-//            searchEngine.embedding(query, tasks);
-//        }
-//        
-//        catch(Exception e){e.printStackTrace();}
-
-        // menu goes here: 
-        // will be written at last after all methods are ready
-   
+        saveTasks(tasks);
     }
     
 }
