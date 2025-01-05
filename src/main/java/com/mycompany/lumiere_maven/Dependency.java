@@ -8,9 +8,9 @@ import java.util.*;
     
 public class Dependency {
     
-    public List<Task> tasks;
+//    public List<Task> tasks;
     
-    public boolean isDependencyCycle(Task task, Task current){
+    private static boolean isDependencyCycle(Task task, Task current){
         if (task == current){
             return true;
         }
@@ -22,11 +22,12 @@ public class Dependency {
         return false;       
     }          
     
-    public Dependency(){
-        tasks = new ArrayList<>();
-    }      
+//    public Dependency(){
+//        tasks = new ArrayList<>();
+//    }
     
-    public void addDependency(int dependentTaskNumber, int dependencyTaskNumber) {
+    public static void addDependency(List<Task> tasks, int dependentTaskNumber, int dependencyTaskNumber) 
+    {
         if (dependentTaskNumber < 1 || dependentTaskNumber > tasks.size() ||
             dependencyTaskNumber < 1 || dependencyTaskNumber > tasks.size()) {
             System.out.println("Invalid task numbers.");
@@ -36,19 +37,50 @@ public class Dependency {
         Task dependentTask = tasks.get(dependentTaskNumber - 1);
         Task dependencyTask = tasks.get(dependencyTaskNumber - 1);
 
-        if (isDependencyCycle(dependencyTask, dependentTask)) {
-            System.out.println("Error: Adding this dependency creates a cycle.");
-            return;
-        }
-
         if (dependentTask == dependencyTask) {
             System.out.println("Error: A task cannot depend on itself.");
+            return;
+        }
+        
+        if (isDependencyCycle(dependencyTask, dependentTask)) {
+            System.out.println("Error: Adding this dependency creates a cycle.");
             return;
         }
 
         dependentTask.addDependency(dependencyTask);
         System.out.println("Task \"" + dependentTask.getTitle() + "\" now depends on \"" + dependencyTask.getTitle() + "\".");
     }
+    
+//    public static Task getTaskById(List<Task> tasks, int id)
+//    {
+//        return tasks.get
+//    }
+    
+      public static void generateDependency(List<Task> tasks)
+      {
+          for (Task task : tasks)
+          {
+              String s = task.getDependsId();
+              if (s.compareTo("")!=0)
+              {
+                  String[] ids = task.getDependsId().split(",");
+                  for (String id_str : ids) {
+                      int id = Integer.parseInt(id_str);
+                      task.addDependency(tasks.get(id - 1));
+                  }
+              }
+          }
+      }
+      
+      public static String saveDependency(Task task)
+      {
+          String ids = "";
+          for (Task t : task.getDependsOn())
+          {
+              ids += t.getId() + ",";
+          }
+          return ids;
+      }
 }
 
 

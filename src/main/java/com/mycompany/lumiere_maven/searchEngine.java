@@ -12,10 +12,11 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 
 public class searchEngine {
-    public static void embedding(String query, List<Task> tasks) throws Exception 
+    private static void embedding(String query, List<Task> tasks) throws Exception 
     {
         String apiUrl = "https://api-inference.huggingface.co/models/sentence-transformers/all-MiniLM-L6-v2";
         Properties prop = new Properties();
@@ -83,12 +84,26 @@ public class searchEngine {
                 Task task = tasks.get(j);
                 String status = (task.getStatus())?"Completed":"Incomplete";
                 String title = task.getTitle();
-                String date = task.getDueDate();
+                String date = task.getDateStr();
                 String category = task.getCategory();
-                System.out.printf("%d: [%-10s] %s - Due: %s - Category: %s\n", 
+                System.out.printf("%d: [%-10s] %s \nDue: %-15s \t Category: %s\n\n", 
                         cnt, status, title, date, category);
                 cnt++;
             }
+        }
+    }
+    
+    public static void run(List<Task> tasks, Scanner input)
+    {
+        view.lines();
+        String query;
+        try {
+            System.out.print("Search by keyword: ");
+            query = input.nextLine();
+            System.out.println("Loading...");
+            searchEngine.embedding(query, tasks);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

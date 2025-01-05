@@ -5,25 +5,31 @@
 package com.mycompany.lumiere_maven;
 
 import java.util.Scanner;
-import java.time.LocalDate;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.text.SimpleDateFormat;
  
 public class EditTask {
     
-    private static List<Task> tasks = new ArrayList<>();
-    
-
-    public void editTask(int taskNumber, Scanner sc){
+    public static void editTask(List<Task> tasks, Scanner sc){
+        view.lines();
+        System.out.println("Task Edit");
+        view.viewAllTasks(tasks);
+        System.out.print("Enter task number to edit: ");
+        int taskNumber = sc.nextInt();
+        sc.nextLine();
+        
         if (taskNumber<1 || taskNumber>tasks.size()){
             System.out.println("Invalid task number");
             return;
         }
         
-        Dependency dependency = new Dependency();
-        Task task = tasks.get(taskNumber -1);
-        
+//        Dependency dependency = new Dependency();
+        Task task = tasks.get(taskNumber-1);
+        System.out.printf("\nTask: %s", task.getTitle());
         while(true){
-            System.out.println("""
+            System.out.println();
+            System.out.print("""
                                What would you like to edit?
                                1. Title
                                2. Description
@@ -31,68 +37,89 @@ public class EditTask {
                                4. Category
                                5. Priority 
                                6. Set Task Dependency
-                               7. Cancel
-                               """);
-            System.out.println("> ");
+                               7. Recurrence Interval
+                               8. Back
+                               > """);
             int choice = sc.nextInt();
+            sc.nextLine();
             
             switch (choice){
-                case 1:
+                case 1:{
                     System.out.print("Enter new title: ");
                     String newTitle = sc.nextLine();
+                    
                     task.setTitle(newTitle);
                     System.out.println("Task title updated.");
+                    break;}
                 
-                case 2:
+                case 2:{
                     System.out.print("Enter new description: ");
                     String newDescription = sc.nextLine();
                     task.setDescription(newDescription);
                     System.out.println("Task description updated.");
+                    break;}
                     
-                case 3:
-                    System.out.print("Enter new due date (YYYY-MM-DD): ");
+                case 3:{
+                    System.out.print("Enter new due date: ");
                     String newDate = sc.nextLine();
-                    try {
-                        String[] parts = newDate.split("-");
-                        if (parts.length == 3) {
-                            int year = Integer.parseInt(parts[0]);
-                            int month = Integer.parseInt(parts[1]) - 1;
-                            int day = Integer.parseInt(parts[2]);
-                            Calendar calendar = Calendar.getInstance();
-                            calendar.set(year, month, day, 0, 0, 0);
-                            Date dueDate = calendar.getTime();
-                            task.setDueDate(dueDate);
-                            System.out.println("Task due date updated.");
-                        } else {
-                            System.out.println("Invalid date format. Please use YYYY-MM-DD.");
-                        }
-                    } catch (Exception e) {
-                        System.out.println("Invalid date format. Please use YYYY-MM-DD.");
+                    try{
+                        Date newDueDate = new SimpleDateFormat("yyyy-MM-dd").parse(newDate);
+                        task.setDueDate(newDueDate);
+                        System.out.println("Task due date updated.");
+                    } catch (Exception e){
+                        System.out.println("Invalid date format.");
                     }
+                    break;}
                     
-                case 4:
+                case 4:{
                     System.out.print("Enter new category: ");
                     String newCategory = sc.nextLine();
                     task.setCategory(newCategory);
                     System.out.println("Task category updated.");
+                    break;}
                     
-                case 5:
+                case 5:{
                     System.out.print("Set priority: ");
                     String newPriority = sc.nextLine();
                     task.setPriority(newPriority);
                     System.out.println("Task priority updated.");
+                    break;}
                     
                 case 6:
+                {
                     System.out.println("Tasks available: ");
-                    viewTasks();
-                    System.out.print("Enter task number that depends on another task: ");
-                    int taskNumber1 = sc.nextInt();
+                    for (int i = 0; i < tasks.size(); i++) {
+                        Task t = tasks.get(i);
+                        System.out.printf("%d. %s [%s]\n", i + 1, t.getTitle(), t.getStatus() ? "Completed" : "Incomplete");
+                    }
+//                    System.out.print("Enter task number that depends on another task: ");
+//                    int taskNumber1 = sc.nextInt();
                     System.out.print("Enter the task number it depends on: ");
                     int taskNumber2 = sc.nextInt();
-                    dependency.addDependency(taskNumber1, taskNumber2);
+                    Dependency.addDependency(tasks, taskNumber, taskNumber2);
                     break;
+                }
                     
                 case 7:
+                {
+                    System.out.printf("Current recurrence interval: %s\n", task.getRecurrenceInterval());
+                    System.out.print("Enter new recurrence interval (none, daily, weekly, monthly): ");
+                    String interval = sc.nextLine().toLowerCase();
+                    String[] intervalList = {"none", "daily", "weekly", "monthly"};
+                    for (String s : intervalList)
+                    {
+                        if (interval.compareTo(s)==0) 
+                        {
+                            task.setRecurrenceInterval(interval);
+                            System.out.println("Recurrence interval changed successfully.");
+                            break;
+                        }
+                    }
+                    if (interval.compareTo(task.getRecurrenceInterval())!=0)
+                        System.out.println("Invalid interval.");
+                    break;
+                }
+                case 8:
                     return;
                     
                 default:

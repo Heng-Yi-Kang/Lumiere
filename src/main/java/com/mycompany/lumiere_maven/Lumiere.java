@@ -12,6 +12,8 @@ import java.io.IOException;
 
 import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Lumiere 
 {
@@ -32,12 +34,14 @@ public class Lumiere
             String [] nextRow;
             while ((nextRow = reader.readNext()) != null)
             {
-                Task task = new Task(nextRow[0], nextRow[1], nextRow[2], 
-                        nextRow[3], nextRow[4], Boolean.parseBoolean(nextRow[5]),
-                        nextRow[6], nextRow[7]);
+                Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(nextRow[3]);
+                Task task = new Task(Integer.parseInt(nextRow[0]), nextRow[1], 
+                        nextRow[2], dueDate, 
+                        nextRow[4], nextRow[5], Boolean.parseBoolean(nextRow[6]),
+                        nextRow[7], nextRow[8]);
                 tasks.add(task);
             }
-
+            Dependency.generateDependency(tasks);
             reader.close();
 
         }
@@ -65,14 +69,15 @@ public class Lumiere
             {
                 String [] data = 
                 {
+                    Integer.toString(task.getId()),
                     task.getTitle(), 
                     task.getDescription(), 
-                    task.getDueDate(), 
+                    task.getDateStr(), 
                     task.getCategory(), 
                     task.getPriority(), 
                     Boolean.toString(task.getStatus()),
-                    task.getDepends(),
-                    task.getRepeat()
+                    Dependency.saveDependency(task),
+                    task.getRecurrenceInterval()
                 };
                 writer.writeNext(data);
             }
@@ -85,23 +90,68 @@ public class Lumiere
         }
     }
     
-    
-    // sample viewTasks(), print out a list of tasks
-    public static void viewTasks(List<Task> tasks)
-    {
-        for (int i = 0; i < tasks.size(); i++)
-        {
-            Task task = tasks.get(i);
-            System.out.printf("%d: %s [%s]\n", i+1, task.getTitle(), 
-                        (task.getStatus())?"completed":"incomplete");
-        }     
-    }
-    
-    
     public static void main(String[] args) 
     {
+        Scanner input = new Scanner(System.in);
         List<Task> tasks = getTasks();
-        viewTasks(tasks);
+        boolean status = true;
+        while(status)
+        {
+            view.lines();
+            System.out.println("Lumiere – your guide to a brighter, more organized life.");
+            System.out.println("""
+                             Action:
+                             1. View tasks.
+                             2. Create new task.
+                             3. Complete a task.
+                             4. Edit a task
+                             5. Search for task(s).
+                             6. Delete a task.
+                             7. Save and Exit.""");
+            System.out.print("> ");
+            int action = input.nextInt();
+            input.nextLine();
+            switch(action)
+            {
+                case 1:
+                    view.viewTasks(tasks, input);
+                    break;
+                case 2:
+                    addtask.createTask(tasks);
+                    break;
+                case 3:
+                    CompleteTask2.markTaskAsComplete(input, tasks);
+                    break;
+                case 4:
+                    EditTask.editTask(tasks, input);
+                    break;
+                case 5:
+                    searchEngine.run(tasks, input);
+                    break;
+                case 6:
+                    addtask.deleteTask(tasks, input);
+                    break;
+                case 7:
+                    System.out.println("See you again :)");
+                    status = false;
+                    break;
+                
+            }
+        }
+        
+        
+        
+        
+//        viewTasks(tasks);
+//        sort.sortTasks(tasks, input);
+        
+//        addtask.createTask(tasks);
+//        viewTasks(tasks);
+//        System.out.print("Enter task no. to edit: ");
+//        int n = input.nextInt();
+//        EditTask.editTask(tasks, n, input);
+//        viewTasks(tasks);
+//        saveTasks(tasks);
 //        email.checkDeadlines(tasks);
 
         // vector search:

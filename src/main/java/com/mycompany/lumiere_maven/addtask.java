@@ -8,9 +8,8 @@ import java.util.Scanner;
 
 public class addtask {
 
-    public static void main(String[] args) {
+    public static void createTask(List<Task> tasks) {
         Scanner scanner = new Scanner(System.in);
-        List<Task> tasks = new ArrayList<>();
 
         System.out.println("\n=== Add New Task ===");
         System.out.print("Enter task title: ");
@@ -30,28 +29,39 @@ public class addtask {
 
         System.out.print("Is this a recurring task? (yes/no): ");
         String recurringResponse = scanner.nextLine();
-
+        
         if (recurringResponse.equalsIgnoreCase("yes")) {
             System.out.print("Enter recurrence interval (daily, weekly, monthly): ");
             String interval = scanner.nextLine().toLowerCase();
 
             try {
                 Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(due_date);
-                // Create a recurring task
-                Task recurringTask = new Task(
-                        title,
-                        description,
-                        due_date,
-                        category,
-                        priority,
-                        false, // Task is initially incomplete
-                        dependency,
-                        interval
-                );
+                String[] intervalList = {"daily", "weekly", "monthly"};
+                boolean status = false;
+                for (String s : intervalList)
+                {
+                    if (interval.compareTo(s)==0)
+                    {
+                        // Create a recurring task
+                        int id = tasks.size()+1;
+                        Task recurringTask = new Task(
+                                id,
+                                title,
+                                description,
+                                dueDate,
+                                category,
+                                priority,
+                                false, // Task is initially incomplete
+                                "",
+                                interval
+                        );
 
-                tasks.add(recurringTask);
-                System.out.println("Recurring task '" + title + "' added successfully!");
-
+                        tasks.add(recurringTask);
+                        System.out.println("Recurring task '" + title + "' added successfully!");
+                        status = true;
+                    }
+                }
+                if (!status) System.out.println("Invalid interval.");
             } catch (Exception e) {
                 System.out.println("Invalid date format. Task not added.");
             }
@@ -59,15 +69,17 @@ public class addtask {
             try {
                 Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(due_date);
                 // Create a non-recurring task
+                int id = tasks.size()+1;
                 Task newTask = new Task(
+                        id,
                         title,
                         description,
-                        due_date,
+                        dueDate,
                         category,
                         priority,
                         false, // Task is initially incomplete
-                        dependency,
-                        ""
+                        "",
+                        "none"
                 );
 
                 tasks.add(newTask);
@@ -77,5 +89,28 @@ public class addtask {
                 System.out.println("Invalid date format. Task not added.");
             }
         }
+    }
+    
+    public static void deleteTask(List<Task> tasks, Scanner input)
+    {
+        view.lines();
+        System.out.println("Task Deletion");
+        view.viewAllTasks(tasks);
+        System.out.print("Enter task no. to delete: ");
+        int taskNum = input.nextInt();
+        input.nextLine();
+        
+        if (taskNum < 1 || taskNum > tasks.size())
+        {
+            System.out.println("Invalid task number.");
+        }
+        else
+        {
+            String title = tasks.get(taskNum-1).getTitle();
+            tasks.remove(taskNum-1);
+            System.out.printf("Task %s was removed successfully.\n", 
+                    title);
+        }
+        
     }
 }

@@ -9,14 +9,21 @@ import java.time.LocalDate;
 import java.util.*;
 
 public class CompleteTask2 {
-    private static void markTaskAsComplete(Scanner scanner) {
-    viewTasks();
+    public static void markTaskAsComplete(Scanner scanner, List<Task> taskList) 
+    {
+        view.lines();
+        for (int i = 0; i < taskList.size(); i++) 
+        {
+            Task task = taskList.get(i);
+            System.out.printf("%2d. %50s [%s]\n", i + 1, task.getTitle(), task.getStatus() ? "Complete" : "Incomplete");
+        }
 
     System.out.print("\nEnter the task number to mark as complete: ");
     int taskNumber = scanner.nextInt() - 1;
+    scanner.nextLine();
 
     if (taskNumber >= 0 && taskNumber < taskList.size()) {
-        Task task = task.get(taskNumber);
+        Task task = taskList.get(taskNumber);
 
         if (task.getStatus()) {
             System.out.println("Task is already marked as complete.");
@@ -34,13 +41,27 @@ public class CompleteTask2 {
         System.out.println("Task '" + task.getTitle() + "' marked as complete!");
 
         // Handle recurring tasks
-        if (task.getRecurrenceInterval() != null && task.getRemainingOccurrences() > 0) {
+//        if (task.getRecurrenceInterval() != null && task.getRemainingOccurrences() > 0) {
+        if (task.getRecurrenceInterval().compareTo("none")!=0) 
+        {
             Date nextDueDate = calculateNextDueDate(task.getDueDate(), task.getRecurrenceInterval());
-            Task nextTask = new Task(task.getTitle(), task.getDescription(), nextDueDate, task.getCategory(), task.getPriority(), task.getRecurrenceInterval(), task.getRemainingOccurrences() - 1);
+            Task nextTask = new Task(
+                    taskList.size(),
+                    task.getTitle(), 
+                    task.getDescription(), 
+                    nextDueDate, 
+                    task.getCategory(), 
+                    task.getPriority(), 
+                    false,
+                    task.getDependsId(),
+                    task.getRecurrenceInterval());
             taskList.add(nextTask);
-            task.decrementOccurrences();
+            nextTask.setDependsOn(task.getDependsOn());
+//            task.decrementOccurrences();
 
-            System.out.println("Next occurrence added: " + nextTask);
+            System.out.println("Next occurrence added: ");
+            System.out.printf("Title: %s\n", nextTask.getTitle());
+            System.out.printf("Due: %s\n", nextTask.getDateStr());
         }
     } else {
         System.out.println("Invalid task number.");

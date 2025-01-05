@@ -78,7 +78,7 @@ public class email{
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-M-d HH:mm:ss");
         
         for(Task task: tasks){
-            String date = preprocessDate(task.getDueDate());
+            String date = preprocessDate(task.getDateStr());
             LocalDateTime deadline = LocalDateTime.parse(date, formatter);
             long hoursUntilDeadline = ChronoUnit.HOURS.between(now,deadline);
 
@@ -93,7 +93,7 @@ public class email{
                     while(writer.hasNext()){
                         body += String.format("%s\n", writer.nextLine());
                         body = body.replace("[Task Name]", task.getTitle());
-                        body = body.replace("[Due Date]", task.getDueDate());
+                        body = body.replace("[Due Date]", task.getDueDate().toString());
                     }
                     writer.close();
                 } catch (IOException e){
