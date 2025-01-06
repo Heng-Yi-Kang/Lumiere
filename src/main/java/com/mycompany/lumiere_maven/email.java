@@ -45,7 +45,7 @@ public class email{
     }
         
     //Send email
-    private static void sendEmail(String subject, String body){
+    private static void sendEmail(String subject, String body, Task task){
         java.util.Properties props = new java.util.Properties();
         props.put("mail.smtp.host", EMAIL_HOST);
         props.put("mail.smtp.port", EMAIL_PORT);
@@ -68,6 +68,7 @@ public class email{
             message.setText(body);
             Transport.send(message);
             System.out.println("Email sent to " + toEmail);
+            task.setEmailStatus(true);
         }catch(MessagingException e){
             System.out.println("Failed to send email: " + e.getMessage());
         }
@@ -82,24 +83,26 @@ public class email{
             LocalDateTime deadline = LocalDateTime.parse(date, formatter);
             long hoursUntilDeadline = ChronoUnit.HOURS.between(now,deadline);
 
-            if(hoursUntilDeadline > 0 && hoursUntilDeadline <= 24){
+            if(hoursUntilDeadline > 0 && hoursUntilDeadline <= 24 && !task.getEmailStatus()){
                 String subject = "Reminder: Task '" + task.getTitle() + "' is due soon!";
 //                String body = "Task: " + task.getTitle() + "\n" + "Description: " + task.getDescription() + "\n" + "Deadline: " + task.getDueDate() + "\n" + "Please complete it before the deadline!";
                 String body = "";
+                String username = loadData.getUsername();
+                System.out.println(subject);
                 try{
                     FileInputStream input = new FileInputStream("resource/message.txt");
-                    Scanner writer = new Scanner(input);
-                    body = writer.nextLine().replace("[User's Name]", "Alex");
-                    while(writer.hasNext()){
-                        body += String.format("%s\n", writer.nextLine());
+                    Scanner reader = new Scanner(input);
+                    body = reader.nextLine().replace("[User's Name]", username);
+                    while(reader.hasNext()){
+                        body += String.format("%s\n", reader.nextLine());
                         body = body.replace("[Task Name]", task.getTitle());
                         body = body.replace("[Due Date]", task.getDueDate().toString());
                     }
-                    writer.close();
+                    reader.close();
                 } catch (IOException e){
                     System.out.println(e.getMessage());
                 }
-                sendEmail(subject, body);
+                sendEmail(subject, body, task);
             }
         }
 

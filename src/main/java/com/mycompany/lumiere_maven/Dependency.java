@@ -51,11 +51,6 @@ public class Dependency {
         System.out.println("Task \"" + dependentTask.getTitle() + "\" now depends on \"" + dependencyTask.getTitle() + "\".");
     }
     
-//    public static Task getTaskById(List<Task> tasks, int id)
-//    {
-//        return tasks.get
-//    }
-    
       public static void generateDependency(List<Task> tasks)
       {
           for (Task task : tasks)
@@ -64,9 +59,14 @@ public class Dependency {
               if (s.compareTo("")!=0)
               {
                   String[] ids = task.getDependsId().split(",");
-                  for (String id_str : ids) {
+                  for (String id_str : ids) 
+                  {
                       int id = Integer.parseInt(id_str);
-                      task.addDependency(tasks.get(id - 1));
+                      for (Task dependedTask : tasks) 
+                      {
+                          int taskId = dependedTask.getId();
+                          if (taskId == id) task.addDependency(dependedTask);
+                      }
                   }
               }
           }

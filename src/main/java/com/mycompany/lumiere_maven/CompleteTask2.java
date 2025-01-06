@@ -5,7 +5,6 @@
 package com.mycompany.lumiere_maven;
 
 import java.util.Scanner;
-import java.time.LocalDate;
 import java.util.*;
 
 public class CompleteTask2 {
@@ -54,7 +53,8 @@ public class CompleteTask2 {
                     task.getPriority(), 
                     false,
                     task.getDependsId(),
-                    task.getRecurrenceInterval());
+                    task.getRecurrenceInterval(),
+                    false   );
             taskList.add(nextTask);
             nextTask.setDependsOn(task.getDependsOn());
 //            task.decrementOccurrences();

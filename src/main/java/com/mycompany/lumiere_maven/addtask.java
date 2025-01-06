@@ -1,7 +1,6 @@
 package com.mycompany.lumiere_maven;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -53,7 +52,8 @@ public class addtask {
                                 priority,
                                 false, // Task is initially incomplete
                                 "",
-                                interval
+                                interval,
+                                false
                         );
 
                         tasks.add(recurringTask);
@@ -79,7 +79,8 @@ public class addtask {
                         priority,
                         false, // Task is initially incomplete
                         "",
-                        "none"
+                        "none",
+                        false
                 );
 
                 tasks.add(newTask);

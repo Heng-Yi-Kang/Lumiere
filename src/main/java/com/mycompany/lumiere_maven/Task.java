@@ -8,12 +8,13 @@ import java.text.SimpleDateFormat;
 public class Task {
     private int id;
     private String title, description, category, priority;
-    private boolean status;
+    private boolean status, emailStatus;
     private Date due_date;
     private String recurrenceInterval; // e.g., "daily", "weekly", "monthly"
 //    private int remainingOccurrences;
     private List<Task> depends_on; 
     private String dependsId;
+    
 
     // due_date(YYYY-MM-DD)
     // category: homework, personal, work
@@ -24,7 +25,7 @@ public class Task {
 
     public Task(int id, String title, String description, Date due_date,
                 String category, String priority, boolean status,
-                String dependsId, String recurrenceInterval) {
+                String dependsId, String recurrenceInterval, boolean emailStatus) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -35,9 +36,9 @@ public class Task {
         this.dependsId = dependsId;
         this.recurrenceInterval = recurrenceInterval;
         this.depends_on = new ArrayList<>();
-        
+        this.emailStatus = emailStatus;
     }
-
+    
 
     public String getTitle() { return this.title; }
     public void setTitle(String title) { this.title = title; }
@@ -102,4 +103,7 @@ public class Task {
     public int getId() { return this.id; }
     
     public String getDependsId() { return this.dependsId; }
+    
+    public boolean getEmailStatus() { return this.emailStatus; }
+    public void setEmailStatus(boolean status) { this.emailStatus = status; }
 }

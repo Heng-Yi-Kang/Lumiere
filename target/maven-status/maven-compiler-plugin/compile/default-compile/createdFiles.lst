@@ -1,5 +1,6 @@
 com/mycompany/lumiere_maven/Dependency.class
-com/mycompany/lumiere_maven/sort.class
-com/mycompany/lumiere_maven/EditTask.class
 com/mycompany/lumiere_maven/CompleteTask2.class
+com/mycompany/lumiere_maven/sort.class
+com/mycompany/lumiere_maven/loadData.class
+com/mycompany/lumiere_maven/EditTask.class
 com/mycompany/lumiere_maven/view.class

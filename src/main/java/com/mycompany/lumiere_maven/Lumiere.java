@@ -1,103 +1,21 @@
 
 package com.mycompany.lumiere_maven;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.io.IOException;
-
-import com.opencsv.CSVReader;
-import com.opencsv.CSVWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Lumiere 
 {
-    private static final String file_path = "./resource/tasks.csv";
-    private static Scanner input = new Scanner(System.in);
-    
-    // method to get all information from csv file, 
-    // create an object of Task for each task,
-    // and store them in a list called tasks.
-    public static List<Task> getTasks()
-    {
-        List<Task> tasks = new ArrayList<>();
-        try 
-        {
-            FileReader filereader = new FileReader(file_path);
-            CSVReader reader = new CSVReader(filereader);
-            
-            String [] nextRow;
-            while ((nextRow = reader.readNext()) != null)
-            {
-                Date dueDate = new SimpleDateFormat("yyyy-MM-dd").parse(nextRow[3]);
-                Task task = new Task(Integer.parseInt(nextRow[0]), nextRow[1], 
-                        nextRow[2], dueDate, 
-                        nextRow[4], nextRow[5], Boolean.parseBoolean(nextRow[6]),
-                        nextRow[7], nextRow[8]);
-                tasks.add(task);
-            }
-            Dependency.generateDependency(tasks);
-            reader.close();
-
-        }
-        
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        
-        return tasks;
-    }
-    
-    
-    // method to write all task information to csv file
-    public static void saveTasks(List<Task> tasks)
-    {
-        File file = new File(file_path);
-        
-        try 
-        {
-            FileWriter outputfile = new FileWriter(file, false);
-            CSVWriter writer = new CSVWriter(outputfile);
-                
-            for (Task task : tasks)
-            {
-                String [] data = 
-                {
-                    Integer.toString(task.getId()),
-                    task.getTitle(), 
-                    task.getDescription(), 
-                    task.getDateStr(), 
-                    task.getCategory(), 
-                    task.getPriority(), 
-                    Boolean.toString(task.getStatus()),
-                    Dependency.saveDependency(task),
-                    task.getRecurrenceInterval()
-                };
-                writer.writeNext(data);
-            }
-               
-            writer.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-    
     public static void main(String[] args) 
     {
         Scanner input = new Scanner(System.in);
-        List<Task> tasks = getTasks();
+        List<Task> tasks = loadData.getTasks();
         boolean status = true;
         while(status)
         {
             view.lines();
+            email.checkDeadlines(tasks);
+            System.out.printf("Welcome %s!\n", loadData.getUsername());
             System.out.println("Lumiere – your guide to a brighter, more organized life.");
             System.out.println("""
                              Action:
@@ -135,10 +53,9 @@ public class Lumiere
                     System.out.println("See you again :)");
                     status = false;
                     break;
-                
             }
         }
-        saveTasks(tasks);
+        loadData.saveTasks(tasks);
     }
     
 }

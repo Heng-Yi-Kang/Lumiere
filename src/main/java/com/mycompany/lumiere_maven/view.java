@@ -6,10 +6,7 @@ package com.mycompany.lumiere_maven;
 
 import java.util.List;
 import java.util.Scanner;
-/**
- *
- * @author arch_kang
- */
+
 public class view {
     public static void viewTasks(List<Task> tasks, Scanner input)
     {
