@@ -25,7 +25,8 @@ public class Lumiere
                              4. Edit a task
                              5. Search for task(s).
                              6. Delete a task.
-                             7. Save and Exit.""");
+                             7. Analyse tasks.
+                             8. Save and Exit.""");
             System.out.print("> ");
             int action = input.nextInt();
             input.nextLine();
@@ -50,6 +51,11 @@ public class Lumiere
                     addtask.deleteTask(tasks, input);
                     break;
                 case 7:
+                    analyse.showCompletionStatus(tasks);
+                    analyse.showCompletionRate(tasks);
+                    analyse.showCategorizedTask(tasks);
+                    break;
+                case 8:
                     System.out.println("See you again :)");
                     status = false;
                     break;
