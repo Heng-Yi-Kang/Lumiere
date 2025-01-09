@@ -24,7 +24,7 @@ public class EditTask {
             return;
         }
         
-//        Dependency dependency = new Dependency();
+        Dependency dependency = new Dependency();
         Task task = tasks.get(taskNumber-1);
         System.out.printf("\nTask: %s", task.getTitle());
         while(true){
@@ -36,7 +36,7 @@ public class EditTask {
                                3. Due Date
                                4. Category
                                5. Priority 
-                               6. Set Task Dependency
+                               6. Manage Task Dependency
                                7. Recurrence Interval
                                8. Back
                                > """);
@@ -87,16 +87,7 @@ public class EditTask {
                     
                 case 6:
                 {
-                    System.out.println("Tasks available: ");
-                    for (int i = 0; i < tasks.size(); i++) {
-                        Task t = tasks.get(i);
-                        System.out.printf("%d. %s [%s]\n", i + 1, t.getTitle(), t.getStatus() ? "Completed" : "Incomplete");
-                    }
-//                    System.out.print("Enter task number that depends on another task: ");
-//                    int taskNumber1 = sc.nextInt();
-                    System.out.print("Enter the task number it depends on: ");
-                    int taskNumber2 = sc.nextInt();
-                    Dependency.addDependency(tasks, taskNumber, taskNumber2);
+                    dependency.manageDependencies(tasks, task, sc);
                     break;
                 }
                     
