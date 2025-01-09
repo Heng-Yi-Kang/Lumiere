@@ -35,7 +35,7 @@ public class analyse{
 
         double completionRate = (double)completedTasks / totalTasks * 100;
         System.out.println("\n --- Task Completion Rate ---");
-        System.out.printf("Task Completion Rate: %.2f%%\n:", completionRate);
+        System.out.printf("Task Completion Rate: %.2f%%\n", completionRate);
     }
 
     public static void showCategorizedTask(List<Task> tasks){

@@ -1,11 +1,30 @@
 package com.mycompany.lumiere_maven;
 
+import static com.mycompany.lumiere_maven.Lumiere.mainMenu;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class addtask {
+    public static Scene createScene(Stage stage)
+    {
+        Label l = new Label("Create Tasks");
+        
+        Button b = new Button("Main Menu");
+        b.setOnAction(e -> { stage.setScene(mainMenu(stage));});
+        
+        VBox root = new VBox(10);
+        root.getChildren().addAll(l, b);
+        
+        
+        return new Scene(root, 600, 500);
+    }
 
     public static void createTask(List<Task> tasks) {
         Scanner scanner = new Scanner(System.in);
