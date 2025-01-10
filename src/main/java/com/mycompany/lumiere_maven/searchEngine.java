@@ -86,8 +86,8 @@ public class searchEngine {
                 String title = task.getTitle();
                 String date = task.getDateStr();
                 String category = task.getCategory();
-                System.out.printf("%d: [%-10s] %s \nDue: %-15s \t Category: %s\n\n", 
-                        cnt, status, title, date, category);
+                System.out.printf("%d: [%-10s] %s (%5.3f)\nDue: %-15s \t Category: %s\n\n", 
+                        cnt, status, title, scores[j], date, category);
                 cnt++;
             }
         }

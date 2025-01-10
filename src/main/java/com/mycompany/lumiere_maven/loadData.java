@@ -8,9 +8,12 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,4 +101,43 @@ public class loadData {
         return username;
     }
     
+    public static void initialise(Scanner input)
+    {   
+        String username = "";
+        String email = "";
+        String token = "";
+        Properties prop = new Properties();
+        try (FileInputStream reader = new FileInputStream("config.properties")) {
+            prop.load(reader);
+            username = prop.getProperty("username");
+        } catch (FileNotFoundException e) {
+            System.out.println("""
+                               ~~~ Welcome to Lumiere ~~~
+                               First timer? No worries - We'll guide you through ><""");
+            System.out.print("Enter your username: ");
+            username = input.nextLine();
+            
+            System.out.print("Enter your email: ");
+            email = input.nextLine();
+            
+            System.out.println("Lumiere is using Hungging Face API for some services. Please create an API token (read), your data would be stored locally.");
+            System.out.print("Enter your Hugging Face API token: ");
+            token = input.nextLine();
+            
+            System.out.println("\nYou can always edit your personal details in \"config.properties\"");
+            try 
+            {
+                PrintWriter writer = new PrintWriter(new FileOutputStream("config.properties", false));
+                writer.println("username=" + username);
+                writer.println("email=" + email);
+                writer.println("api_token=" + token);
+                writer.close();
+            }
+            catch(Exception ex){
+                System.out.println("Error while creating file");
+            }
+        } catch (IOException e){
+            System.out.println("Error occured");
+        }
+    }
 }
