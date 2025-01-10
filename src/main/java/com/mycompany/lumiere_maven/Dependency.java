@@ -10,7 +10,7 @@ public class Dependency {
     
 //    public List<Task> tasks;
     
-    private static boolean isDependencyCycle(Task task, Task current){
+    public static boolean isDependencyCycle(Task task, Task current){
         if (task == current){
             return true;
         }
@@ -107,6 +107,7 @@ public class Dependency {
                             System.out.printf("%d. %s\n", i + 1, dependencies.get(i).getTitle());
                         }
                     }
+                    break;
                 }
                 case 2: {
                     System.out.println("Available tasks:");
@@ -117,6 +118,7 @@ public class Dependency {
                     System.out.print("Enter task number to add as a dependency: ");
                     int dependencyTaskNumber = sc.nextInt();
                     Dependency.addDependency(tasks, task.getId(), dependencyTaskNumber);
+                    break;
                 }
                 case 3: {
                     List<Task> dependencies = task.getDependsOn();
@@ -137,6 +139,7 @@ public class Dependency {
                             System.out.println("Invalid dependency number.");
                         }
                     }
+                    break;
                 }
                 case 4: {
                     List<Task> dependencies = task.getDependsOn();
@@ -176,6 +179,7 @@ public class Dependency {
                             System.out.println("Dependency replaced successfully.");
                         }
                     }
+                    break;
                 }
                 case 5: {
                     return;

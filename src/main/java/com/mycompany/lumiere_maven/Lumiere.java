@@ -1,8 +1,10 @@
 
 package com.mycompany.lumiere_maven;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
+import java.util.List;
+//import java.util.Scanner;
+//import javafx.animation.FadeTransition;
+//import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,9 +12,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+//import javafx.util.Duration;
 
 public class Lumiere extends Application
+//public class Lumiere
 {
     @Override 
     public void start(Stage stage)
@@ -27,17 +30,16 @@ public class Lumiere extends Application
         Label title = new Label("Lumiere");
 
         VBox viewBox = new VBox();
-//        viewBox.setPrefSize(300, 300);
         viewBox.setStyle("-fx-alignment: center;");
         
         Label viewText = new Label("View Tasks");
+        List<Task> tasks = loadData.getTasks();
         viewBox.getChildren().add(viewText);
         viewBox.setOnMouseClicked(e -> {
-            stage.setScene(view.viewScene(stage));
+            stage.setScene(view.viewScene(stage, tasks));
         });
         
         VBox create = new VBox();
-//        create.setPrefSize(300, 300);
         create.setStyle("-fx-alignment: center;");
 
         Label createText = new Label("Create Tasks");
@@ -50,7 +52,7 @@ public class Lumiere extends Application
         root.getChildren().addAll(title, viewBox, create);
         root.setAlignment(Pos.CENTER);
 
-        return new Scene(root, 600, 500);
+        return new Scene(root, 1200, 1000);
     }
     
     

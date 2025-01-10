@@ -23,7 +23,7 @@ public class addtask {
         root.getChildren().addAll(l, b);
         
         
-        return new Scene(root, 600, 500);
+        return new Scene(root, 1200, 1000);
     }
 
     public static void createTask(List<Task> tasks) {

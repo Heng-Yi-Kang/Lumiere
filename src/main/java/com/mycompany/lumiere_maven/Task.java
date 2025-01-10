@@ -72,17 +72,20 @@ public class Task {
 //        this.remainingOccurrences--;
 //    }
 
-    public void addDependency(Task task) {
+    public String addDependency(Task task) {
+        String message = "";
         if (task == this) {
-            System.out.println("Error: A task cannot depend on itself.");
-            return;
+            message = "Error: A task cannot depend on itself.";
+            return message;
         }
         if (depends_on.contains(task)) {
-            System.out.println("Task is already a dependency.");
-            return;
+            message = "Task is already a dependency.";
+            return message;
         }
         this.depends_on.add(task);
 //        System.out.println("Task \"" + title + "\" now depends on \"" + task.getTitle() + "\".");
+        message = "Task \"" + title + "\" now depends on \"" + task.getTitle() + "\".";
+        return message;
     }
     
     public String getDateStr(){
