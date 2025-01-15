@@ -3,6 +3,7 @@ com/mycompany/lumiere_maven/email.class
 com/mycompany/lumiere_maven/email$1.class
 com/mycompany/lumiere_maven/view$1.class
 com/mycompany/lumiere_maven/searchEngine.class
+com/mycompany/lumiere_maven/searchEngine$1.class
 com/mycompany/lumiere_maven/EditTask$1.class
 com/mycompany/lumiere_maven/Task.class
 com/mycompany/lumiere_maven/Dependency.class

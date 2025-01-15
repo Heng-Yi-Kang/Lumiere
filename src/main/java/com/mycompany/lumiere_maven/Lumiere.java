@@ -46,6 +46,16 @@ public class Lumiere extends Application
             stage.setScene(addtask.createScene(stage, tasks));
         });
 
+
+        VBox search = new VBox();
+        search.setStyle("-fx-alignment: center;");
+
+        Label searchText = new Label("Search Tasks");
+        search.getChildren().add(searchText);
+        search.setOnMouseClicked(e -> {
+            stage.setScene(searchEngine.searchScene(stage, tasks));
+        });
+
         Button exit = new Button("Save and Exit");
         exit.setOnAction(event -> {
             loadData.saveTasks(tasks);
@@ -53,7 +63,7 @@ public class Lumiere extends Application
         });
         
         VBox root = new VBox(10);
-        root.getChildren().addAll(title, username, viewBox, create, exit);
+        root.getChildren().addAll(title, username, viewBox, create, search, exit);
         root.setAlignment(Pos.CENTER);
         stage.setTitle("Main Menu");
         
