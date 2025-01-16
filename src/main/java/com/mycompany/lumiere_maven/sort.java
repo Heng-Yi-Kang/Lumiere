@@ -49,7 +49,7 @@ public class sort {
         }
     }
 
-    private static int getPriorityValue(String priority) {
+    public static int getPriorityValue(String priority) {
         switch (priority.toLowerCase()) {
             case "high":
                 return 3;

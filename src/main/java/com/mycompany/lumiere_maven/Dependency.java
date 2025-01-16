@@ -10,7 +10,7 @@ public class Dependency {
     
 //    public List<Task> tasks;
     
-    private static boolean isDependencyCycle(Task task, Task current){
+    public static boolean isDependencyCycle(Task task, Task current){
         if (task == current){
             return true;
         }
@@ -26,7 +26,7 @@ public class Dependency {
 //        tasks = new ArrayList<>();
 //    }
     
-    public static void addDependency(List<Task> tasks, int dependentTaskNumber, int dependencyTaskNumber) 
+    public static void addDependency(List<Task> tasks, Task task, int dependentTaskNumber, int dependencyTaskNumber) 
     {
         if (dependentTaskNumber < 1 || dependentTaskNumber > tasks.size() ||
             dependencyTaskNumber < 1 || dependencyTaskNumber > tasks.size()) {
@@ -34,7 +34,7 @@ public class Dependency {
             return;
         }
 
-        Task dependentTask = tasks.get(dependentTaskNumber - 1);
+        Task dependentTask = task;
         Task dependencyTask = tasks.get(dependencyTaskNumber - 1);
 
         if (dependentTask == dependencyTask) {
@@ -47,8 +47,8 @@ public class Dependency {
             return;
         }
 
-        dependentTask.addDependency(dependencyTask);
-        System.out.println("Task \"" + dependentTask.getTitle() + "\" now depends on \"" + dependencyTask.getTitle() + "\".");
+        System.out.println(dependentTask.addDependency(dependencyTask));
+//        System.out.println("Task \"" + dependentTask.getTitle() + "\" now depends on \"" + dependencyTask.getTitle() + "\".");
     }
     
       public static void generateDependency(List<Task> tasks)
@@ -107,6 +107,7 @@ public class Dependency {
                             System.out.printf("%d. %s\n", i + 1, dependencies.get(i).getTitle());
                         }
                     }
+                    break;
                 }
                 case 2: {
                     System.out.println("Available tasks:");
@@ -116,7 +117,8 @@ public class Dependency {
                     }
                     System.out.print("Enter task number to add as a dependency: ");
                     int dependencyTaskNumber = sc.nextInt();
-                    Dependency.addDependency(tasks, task.getId(), dependencyTaskNumber);
+                    Dependency.addDependency(tasks, task, task.getId(), dependencyTaskNumber);
+                    break;
                 }
                 case 3: {
                     List<Task> dependencies = task.getDependsOn();
@@ -137,6 +139,7 @@ public class Dependency {
                             System.out.println("Invalid dependency number.");
                         }
                     }
+                    break;
                 }
                 case 4: {
                     List<Task> dependencies = task.getDependsOn();
@@ -176,6 +179,7 @@ public class Dependency {
                             System.out.println("Dependency replaced successfully.");
                         }
                     }
+                    break;
                 }
                 case 5: {
                     return;

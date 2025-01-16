@@ -1,8 +1,10 @@
 
 package com.mycompany.lumiere_maven;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ScaleTransition;
+import java.util.List;
+//import java.util.Scanner;
+//import javafx.animation.FadeTransition;
+//import javafx.animation.ScaleTransition;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -10,49 +12,72 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.util.Duration;
+//import javafx.util.Duration;
 
 public class Lumiere extends Application
 {
-    @Override 
-    public void start(Stage stage)
-    {
-        stage.setScene(mainMenu(stage));
+    @Override
+    public void start(Stage stage) {
+        List<Task> tasks = loadData.getTasks();
+        loadData.initialise(stage, tasks);
         stage.setTitle("Lumiere");
         stage.show();
     }
-    
-    public static Scene mainMenu(Stage stage)
-    {
-        Label title = new Label("Lumiere");
 
-        VBox viewBox = new VBox();
-//        viewBox.setPrefSize(300, 300);
-        viewBox.setStyle("-fx-alignment: center;");
+    public static Scene mainMenu(Stage stage, List<Task> tasks) {
+        Label title = new Label("Lumiere");
+        Label username = new Label("Welcome, " + loadData.getUsername());
         
+        VBox viewBox = new VBox();
+        viewBox.setStyle("-fx-alignment: center;");
+
         Label viewText = new Label("View Tasks");
         viewBox.getChildren().add(viewText);
         viewBox.setOnMouseClicked(e -> {
-            stage.setScene(view.viewScene(stage));
+            stage.setScene(view.viewScene(stage, tasks));
         });
-        
+
         VBox create = new VBox();
-//        create.setPrefSize(300, 300);
         create.setStyle("-fx-alignment: center;");
 
         Label createText = new Label("Create Tasks");
         create.getChildren().add(createText);
         create.setOnMouseClicked(e -> {
-            stage.setScene(addtask.createScene(stage));
+            stage.setScene(addtask.createScene(stage, tasks));
         });
 
-        VBox root = new VBox(10);
-        root.getChildren().addAll(title, viewBox, create);
-        root.setAlignment(Pos.CENTER);
 
-        return new Scene(root, 600, 500);
+        VBox search = new VBox();
+        search.setStyle("-fx-alignment: center;");
+
+        Label searchText = new Label("Search Tasks");
+        search.getChildren().add(searchText);
+        search.setOnMouseClicked(e -> {
+            stage.setScene(searchEngine.searchScene(stage, tasks));
+        });
+
+        VBox analyse = new VBox();
+        analyse.setStyle("-fx-alignment: center;");
+
+        Label analyseText = new Label("Analyse Tasks");
+        analyse.getChildren().add(analyseText);
+        analyse.setOnMouseClicked(e -> {
+            stage.setScene(com.mycompany.lumiere_maven.analyse.analyseScene(stage, tasks));
+        });
+
+        Button exit = new Button("Save and Exit");
+        exit.setOnAction(event -> {
+            loadData.saveTasks(tasks);
+            stage.close();
+        });
+        
+        VBox root = new VBox(10);
+        root.getChildren().addAll(title, username, viewBox, create, search, analyse, exit);
+        root.setAlignment(Pos.CENTER);
+        stage.setTitle("Main Menu");
+        
+        return new Scene(root, 1200, 1000);
     }
-    
     
     public static void main(String[] args) 
     {
@@ -62,6 +87,7 @@ public class Lumiere extends Application
 //        while(status)
 //        {
 //            view.lines();
+//            loadData.initialise(input);
 //            email.checkDeadlines(tasks);
 //            System.out.printf("Welcome %s!\n", loadData.getUsername());
 //            System.out.println("Lumiere – your guide to a brighter, more organized life.");

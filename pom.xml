@@ -66,7 +66,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.mycompany.lumiere_maven.LumiereApp</mainClass>
+                            <mainClass>com.mycompany.lumiere_maven.Lumiere</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -83,7 +83,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifest>
-                            <mainClass>com.mycompany.lumiere_maven.LumiereApp</mainClass>
+                            <mainClass>com.mycompany.lumiere_maven.Lumiere</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

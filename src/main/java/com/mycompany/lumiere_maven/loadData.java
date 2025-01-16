@@ -8,15 +8,25 @@ import com.opencsv.CSVReader;
 import com.opencsv.CSVWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import static java.lang.System.out;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 /**
  *
@@ -98,4 +108,98 @@ public class loadData {
         return username;
     }
     
+//    public static void initialise(Scanner input)
+//    {   
+//        String username = "";
+//        String email = "";
+//        String token = "";
+//        Properties prop = new Properties();
+//        try (FileInputStream reader = new FileInputStream("config.properties")) {
+//            prop.load(reader);
+//            username = prop.getProperty("username");
+//        } catch (FileNotFoundException e) {
+//            System.out.println("""
+//                               ~~~ Welcome to Lumiere ~~~
+//                               First timer? No worries - We'll guide you through ><""");
+//            System.out.print("Enter your username: ");
+//            username = input.nextLine();
+//            
+//            System.out.print("Enter your email: ");
+//            email = input.nextLine();
+//            
+//            System.out.println("Lumiere is using Hungging Face API for some services. Please create an API token (read), your data would be stored locally.");
+//            System.out.print("Enter your Hugging Face API token: ");
+//            token = input.nextLine();
+//            
+//            System.out.println("\nYou can always edit your personal details in \"config.properties\"");
+//            try 
+//            {
+//                PrintWriter writer = new PrintWriter(new FileOutputStream("config.properties", false));
+//                writer.println("username=" + username);
+//                writer.println("email=" + email);
+//                writer.println("api_token=" + token);
+//                writer.close();
+//            }
+//            catch(Exception ex){
+//                System.out.println("Error while creating file");
+//            }
+//        } catch (IOException e){
+//            System.out.println("Error occured");
+//        }
+//    }
+    
+    public static void initialise(Stage stage, List<Task> tasks) {
+        
+        Properties prop = new Properties();
+        try (FileInputStream reader = new FileInputStream("config.properties")) {
+            prop.load(reader);
+            stage.setScene(Lumiere.mainMenu(stage, tasks));
+        } catch (FileNotFoundException e) {
+            stage.setScene(getInfo(stage, tasks));
+        } catch (IOException e) {
+            System.out.println("Error occured");
+        }
+        
+    }
+    
+    public static Scene getInfo(Stage stage, List<Task> tasks)
+    {
+        String welcomeMessage = """
+                               ~~~ Welcome to Lumiere ~~~
+                               First timer? No worries - We'll guide you through ><""";
+
+        Label welcome = new Label(welcomeMessage);
+        TextField nameField = new TextField();
+        nameField.setPromptText("Enter your username");
+
+        TextField emailField = new TextField();
+        emailField.setPromptText("Enter your email");
+
+        TextField apiField = new TextField();
+        apiField.setPromptText("Enter your Hugging Face API token");
+
+//            System.out.println("Lumiere is using Hungging Face API for some services. Please create an API token (read), your data would be stored locally.");
+//            System.out.print("Enter your Hugging Face API token: ");
+//            token = input.nextLine();
+//            System.out.println("\nYou can always edit your personal details in \"config.properties\"");
+        Button submit = new Button("Submit");
+        submit.setOnAction(event -> {
+            try {
+                PrintWriter writer = new PrintWriter(new FileOutputStream("config.properties", false));
+                writer.println("username=" + nameField.getText());
+                writer.println("email=" + emailField.getText());
+                writer.println("api_token=" + apiField.getText());
+                writer.close();
+                stage.setScene(Lumiere.mainMenu(stage, tasks));
+            } catch (Exception ex) {
+                System.out.println("Error while creating file");
+            }
+
+        });
+        
+        VBox root = new VBox(10);
+        root.getChildren().addAll(welcome, nameField, emailField, apiField, submit);
+        
+        return new Scene(root, 1200, 1000);
+    }
 }
