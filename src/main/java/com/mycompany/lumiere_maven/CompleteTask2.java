@@ -68,7 +68,7 @@ public class CompleteTask2 {
     }
 }
 
-private static Date calculateNextDueDate(Date currentDate, String interval) {
+public static Date calculateNextDueDate(Date currentDate, String interval) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(currentDate);
 

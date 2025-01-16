@@ -7,8 +7,10 @@ com/mycompany/lumiere_maven/LumiereApp.class
 com/mycompany/lumiere_maven/CompleteTask2.class
 com/mycompany/lumiere_maven/Lumiere.class
 com/mycompany/lumiere_maven/analyse.class
+com/mycompany/lumiere_maven/personalInfo.class
 com/mycompany/lumiere_maven/sort.class
 com/mycompany/lumiere_maven/searchEngine.class
+com/mycompany/lumiere_maven/searchEngine$1.class
 com/mycompany/lumiere_maven/EditTask$1.class
 com/mycompany/lumiere_maven/loadData.class
 com/mycompany/lumiere_maven/EditTask.class

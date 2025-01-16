@@ -1,0 +1,61 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : Jan 15, 2025, 6:35:50 PM
+    Author     : arch_kang
+*/
+.root {
+    -fx-background-color: #EFF3EA;
+}
+
+
+
+.title-label {
+    -fx-font-size: 20px;
+    -fx-text-fill: #9c9e99;
+}
+
+.title-label:hover {
+    -fx-font-size: 25px;
+    -fx-text-fill: #727D73;
+}
+
+.header {
+    -fx-font-size: 30px;           /* Large font size */
+    -fx-font-weight: bold;         /* Bold text */
+    -fx-text-fill: #2c3e50;        /* Dark blue-gray color for text */
+    -fx-alignment: center; 
+}
+
+.subheader {
+    -fx-font-size: 25px;
+    -fx-padding: 10px;  
+    -fx-text-fill: #A9BFA8;
+}
+
+.button {
+    -fx-background-color: #D9DFC6; 
+    -fx-text-fill: #727D73;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.button:pressed {
+    -fx-background-color: #1976D2; /* Darker Blue */
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.7), 10, 0, 0, 0);
+}
+
+.button:hover {
+    -fx-background-color: #FFF2C2; 
+    -fx-text-fill: #2c3e50;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}

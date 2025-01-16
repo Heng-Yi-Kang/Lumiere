@@ -4,6 +4,7 @@
  */
 package com.mycompany.lumiere_maven;
 
+import static com.mycompany.lumiere_maven.CompleteTask2.calculateNextDueDate;
 import static com.mycompany.lumiere_maven.view.viewScene;
 import java.util.Scanner;
 import java.util.Date;
@@ -38,8 +39,10 @@ import javafx.stage.Stage;
 public class EditTask {
     public static Scene showTaskDetails(Stage stage, List<Task> tasks, Task task) {
         Label title = new Label("Task Details");
+        title.getStyleClass().add("subheader");
         String s = String.format("[%s]", task.getStatus() ? "Completed" : "Incomplete");
         Label status = new Label(s);
+        status.getStyleClass().add("subheader");
         
         HBox header = new HBox(30);
         header.getChildren().addAll(title, status);
@@ -104,7 +107,7 @@ public class EditTask {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        Button back = new Button("Back");
+        Button back = new Button("View");
         back.setOnAction(e -> {
             stage.setScene(viewScene(stage, tasks));
         });
@@ -118,6 +121,7 @@ public class EditTask {
 
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
+                    removeTaskFromDependencies(tasks, task);
                     tasks.remove(task);
                     stage.setScene(viewScene(stage, tasks));
                 } 
@@ -132,22 +136,93 @@ public class EditTask {
         Label stateLabel = new Label();
         mark.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                task.setStatus(true);
+                // Check if all dependencies are completed
+                boolean allDependenciesCompleted = true;
+                for (Task dependency : task.getDependsOn()) {
+                    if (!dependency.getStatus()) {
+                        allDependenciesCompleted = false;
+                        break;
+                    }
+                }
+
+                if (allDependenciesCompleted) {
+                    task.setStatus(true);
+                    stateLabel.setText("Task marked as complete.");
+                    
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Task Management");
+                    alert.setHeaderText("Task marked as complete.");
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            if (task.getRecurrenceInterval().compareTo("none") != 0) {
+                                Date nextDueDate = calculateNextDueDate(task.getDueDate(), task.getRecurrenceInterval());
+                                Task nextTask = new Task(
+                                        tasks.size(),
+                                        task.getTitle(),
+                                        task.getDescription(),
+                                        nextDueDate,
+                                        task.getCategory(),
+                                        task.getPriority(),
+                                        false,
+                                        task.getDependsId(),
+                                        task.getRecurrenceInterval(),
+                                        false);
+                                tasks.add(nextTask);
+                                nextTask.setDependsOn(task.getDependsOn());
+//            task.decrementOccurrences();
+
+                                System.out.println("Next occurrence added: ");
+                                System.out.printf("Title: %s\n", nextTask.getTitle());
+                                System.out.printf("Due: %s\n", nextTask.getDateStr());
+                            }
+                            stage.setScene(showTaskDetails(stage, tasks, task));
+                        }
+                    });
+                } else {
+                    mark.setSelected(false); // Revert the checkbox
+                    stateLabel.setText("Cannot mark as complete: Some dependencies are incomplete.");
+                    Alert alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Task Management");
+                    alert.setHeaderText("Cannot mark as complete: Some dependencies are incomplete.");
+
+                    alert.showAndWait().ifPresent(response -> {
+                        if (response == ButtonType.OK) {
+                            stage.setScene(showTaskDetails(stage, tasks, task));
+                        }
+                    });
+                }
             } else {
                 task.setStatus(false);
+                stateLabel.setText("Task marked as incomplete.");
             }
             stage.setScene(showTaskDetails(stage, tasks, task));
         });
         
         VBox root = new VBox(10);
+        grid.setAlignment(Pos.CENTER);
+        header.setAlignment(Pos.CENTER);
+        
+        buttons.setAlignment(Pos.CENTER);
         root.getChildren().addAll(header, grid, mark, stateLabel, buttons);
+        root.setAlignment(Pos.CENTER);
         stage.setTitle(task.getTitle());
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
 
-        return new Scene(root, 1200, 1000);
+        return scene;
     }
 
+    public static void removeTaskFromDependencies(List<Task> tasks, Task taskToDelete) {
+        for (Task task : tasks) {
+            List<Task> dependencies = task.getDependsOn();
+            dependencies.removeIf(dependency -> dependency.equals(taskToDelete));
+        }
+    }
+    
     public static Scene editTitle(Stage stage, List<Task> tasks, Task task) {
         Label l = new Label("Enter new title: ");
+        l.getStyleClass().add("subheader");
         Label result = new Label();
         TextField textField = new TextField();
 
@@ -166,15 +241,20 @@ public class EditTask {
         buttons.getChildren().addAll(submitButton, back);
 
         VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(l, textField, result, buttons);
 
         stage.setTitle(task.getTitle() + "Edit Title");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
 
     public static Scene editDescription(Stage stage, List<Task> tasks, Task task) 
     {
         Label l = new Label("Enter new description: ");
+        l.getStyleClass().add("subheader");
         Label result = new Label();
         TextField textField = new TextField();
 
@@ -194,14 +274,19 @@ public class EditTask {
 
         VBox root = new VBox(10);
         root.getChildren().addAll(l, textField, result, buttons);
+        root.setAlignment(Pos.CENTER);
 
         stage.setTitle("Edit Description");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
 
     public static Scene editDate(Stage stage, List<Task> tasks, Task task) 
     {
         Label l = new Label("Enter new due date: ");
+        l.getStyleClass().add("subheader");
         Label result = new Label();
         TextField textField = new TextField();
 
@@ -226,14 +311,19 @@ public class EditTask {
 
         VBox root = new VBox(10);
         root.getChildren().addAll(l, textField, result, buttons);
+        root.setAlignment(Pos.CENTER);
 
         stage.setTitle("Edit Due Date");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
 
     public static Scene editCategory(Stage stage, List<Task> tasks, Task task) 
     {
         Label l = new Label("Choose an option:");
+        l.getStyleClass().add("subheader");
         String[] titles = {"work", "homework", "personal"};
 
         ObservableList<String> items = FXCollections.observableArrayList(titles);
@@ -265,15 +355,20 @@ public class EditTask {
         buttons.getChildren().addAll(submitButton, back);
 
         VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(l, listView, selectedLabel, buttons);
 
         stage.setTitle("Edit Category");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
 
     public static Scene editPriority(Stage stage, List<Task> tasks, Task task) 
     {
         Label l = new Label("Choose an option:");
+        l.getStyleClass().add("subheader");
         String[] titles = {"low", "medium", "high"};
 
         ObservableList<String> items = FXCollections.observableArrayList(titles);
@@ -305,16 +400,21 @@ public class EditTask {
         buttons.getChildren().addAll(submitButton, back);
 
         VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(l, listView, selectedLabel, buttons);
 
         stage.setTitle("Edit Priority");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
     
     public static Scene editDependency(Stage stage,List<Task> tasks, Task task) {
         VBox root = new VBox(10);
 
         Label l = new Label("Current Dependencies ");
+        l.getStyleClass().add("subheader");
         root.getChildren().add(l);
         List<Task> dependencies = task.getDependsOn();
         if (dependencies.isEmpty()) {
@@ -392,6 +492,7 @@ public class EditTask {
             tableView.setMaxWidth(1500);
             tableView.setPrefHeight(dependencies.size() * 50 + 25);
             
+            display.setAlignment(Pos.CENTER);
             display.getChildren().addAll(selectedLabel, delete);
             root.getChildren().addAll(tableView, display);
             
@@ -404,13 +505,18 @@ public class EditTask {
         back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
 
         root.getChildren().addAll(add, back);
+        root.setAlignment(Pos.CENTER);
         stage.setTitle(task.getTitle() + " - Manage Dependencies");
 
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
 
     public static Scene addDepends(Stage stage, List<Task> tasks, Task task) {
         Label l = new Label("Available tasks:");
+        l.getStyleClass().add("subheader");
         Map<String, Integer> map = new LinkedHashMap<>();
         ArrayList<String> titles = new ArrayList<>();
         for (int i = 0; i < tasks.size(); i++) {
@@ -452,14 +558,19 @@ public class EditTask {
         back.setOnAction(event -> stage.setScene(editDependency(stage, tasks, task)));
 
         VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(l, listView, selectedLabel, confirm, result, back);
 
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
     
     public static Scene editRecurrence(Stage stage, List<Task> tasks, Task task) 
     {
         Label l = new Label("Choose an option:");
+        l.getStyleClass().add("subheader");
         String[] titles = {"none", "daily", "weekly", "monthly"};
 
         ObservableList<String> items = FXCollections.observableArrayList(titles);
@@ -491,10 +602,14 @@ public class EditTask {
         buttons.getChildren().addAll(submitButton, back);
 
         VBox root = new VBox(10);
+        root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(l, listView, selectedLabel, buttons);
 
         stage.setTitle("Edit Recurrence Interval");
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
     
     public static void editTask(List<Task> tasks, Scanner sc){

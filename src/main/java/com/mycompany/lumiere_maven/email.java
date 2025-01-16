@@ -18,6 +18,8 @@ import java.io.FileInputStream;
 import java.util.Properties;
 import java.util.Scanner;
 import java.io.IOException;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 public class email{
     private static final String EMAIL_HOST = "smtp.gmail.com";
@@ -89,6 +91,11 @@ public class email{
                 String body = "";
                 String username = loadData.getUsername();
                 System.out.println(subject);
+                Alert infoAlert = new Alert(AlertType.INFORMATION);
+                infoAlert.setTitle("Lumiere");
+                infoAlert.setHeaderText("Task Due Soon!");
+                infoAlert.setContentText(subject);
+                infoAlert.showAndWait();
                 try{
                     FileInputStream input = new FileInputStream("resource/message.txt");
                     Scanner reader = new Scanner(input);

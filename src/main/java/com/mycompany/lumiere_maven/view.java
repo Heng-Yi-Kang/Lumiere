@@ -25,6 +25,7 @@ public class view {
     
     public static Scene viewScene(Stage stage, List<Task> tasks) {
         Label l = new Label("View Tasks");
+        l.getStyleClass().add("subheader");
 
         TableView<Task> tableView = new TableView<>();
 
@@ -119,6 +120,8 @@ public class view {
         Scene scene = new Scene(root, 1200, 1000);
         tableView.prefHeightProperty().bind(scene.heightProperty().divide(1.33));
         tableView.prefWidthProperty().bind(scene.widthProperty().divide(1.33));
+        
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
         
         stage.setTitle("View Tasks");
         return scene;

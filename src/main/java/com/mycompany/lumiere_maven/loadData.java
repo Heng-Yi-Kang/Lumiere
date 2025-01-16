@@ -21,7 +21,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -103,11 +106,114 @@ public class loadData {
             prop.load(input);
             username = prop.getProperty("username");
         } catch (Exception e) {
-            System.out.println("Error with loading email: " + e.getMessage());
+            System.out.println("Error: " + e.getMessage());
         }
         return username;
     }
     
+    public static String getEmail() {
+        Properties prop = new Properties();
+        String email = "";
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+            email = prop.getProperty("email");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return email;
+    }
+    
+    public static String getToken() {
+        Properties prop = new Properties();
+        String token = "";
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+            token = prop.getProperty("api_token");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+        return token;
+    }
+    
+    public static void setUsername(String name)
+    {
+        Properties prop = new Properties();
+        
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+        
+        prop.setProperty("username", name);
+        
+        try (FileOutputStream output = new FileOutputStream("config.properties")){
+            prop.store(output, "Updated username");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+    }
+    
+    public static void setEmail (String email)
+    {
+        Properties prop = new Properties();
+        
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+        
+        prop.setProperty("email", email);
+        
+        try (FileOutputStream output = new FileOutputStream("config.properties")){
+            prop.store(output, "Updated email");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+    }
+    
+    public static void setToken(String token) {
+        Properties prop = new Properties();
+
+        try (FileInputStream input = new FileInputStream("config.properties")) {
+            prop.load(input);
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+
+        prop.setProperty("api_token", token);
+
+        try (FileOutputStream output = new FileOutputStream("config.properties")) {
+            prop.store(output, "Updated API token");
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText(e.getMessage());
+        }
+    }
 //    public static void initialise(Scanner input)
 //    {   
 //        String username = "";
@@ -158,6 +264,12 @@ public class loadData {
             stage.setScene(getInfo(stage, tasks));
         } catch (IOException e) {
             System.out.println("Error occured");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An error has occurred!");
+            alert.setContentText("Something went wrong. Please try again.");
+
+            alert.showAndWait();
         }
         
     }
@@ -169,19 +281,19 @@ public class loadData {
                                First timer? No worries - We'll guide you through ><""";
 
         Label welcome = new Label(welcomeMessage);
+        welcome.getStyleClass().add("subheader");
         TextField nameField = new TextField();
         nameField.setPromptText("Enter your username");
 
         TextField emailField = new TextField();
         emailField.setPromptText("Enter your email");
 
+        String apiMessage = "Lumiere is using Hungging Face API for some services. Please create an API token (read), your data would be stored locally.";
+        Label api = new Label(apiMessage);
+        api.getStyleClass().add("subheader");
         TextField apiField = new TextField();
         apiField.setPromptText("Enter your Hugging Face API token");
 
-//            System.out.println("Lumiere is using Hungging Face API for some services. Please create an API token (read), your data would be stored locally.");
-//            System.out.print("Enter your Hugging Face API token: ");
-//            token = input.nextLine();
-//            System.out.println("\nYou can always edit your personal details in \"config.properties\"");
         Button submit = new Button("Submit");
         submit.setOnAction(event -> {
             try {
@@ -193,13 +305,24 @@ public class loadData {
                 stage.setScene(Lumiere.mainMenu(stage, tasks));
             } catch (Exception ex) {
                 System.out.println("Error while creating file");
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("An error has occurred!");
+                alert.setContentText("Something went wrong. Please try again.");
+
+                alert.showAndWait();
             }
 
         });
         
         VBox root = new VBox(10);
-        root.getChildren().addAll(welcome, nameField, emailField, apiField, submit);
+        root.getChildren().addAll(welcome, nameField, emailField, api, apiField, submit);
+        root.setAlignment(Pos.CENTER);
         
-        return new Scene(root, 1200, 1000);
+        Scene scene = new Scene(root, 1200, 1000);
+        scene.getStylesheets().add(Lumiere.class.getResource("/lumiere.css").toExternalForm());
+
+        return scene;
     }
+    
 }
