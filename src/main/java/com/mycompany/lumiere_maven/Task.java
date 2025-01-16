@@ -98,7 +98,7 @@ public class Task {
         for (int i = 0; i < this.depends_on.size(); i++)
         {
            Task t = this.depends_on.get(i);
-           dependedTask += t.getTitle() + ((i==this.depends_on.size()-1)?"":",");
+           dependedTask += t.getTitle() + ((i==this.depends_on.size()-1)?"":", ");
         }
         return dependedTask;
     }
