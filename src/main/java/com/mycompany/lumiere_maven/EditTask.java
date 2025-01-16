@@ -34,16 +34,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
- 
+
 public class EditTask {
     public static Scene showTaskDetails(Stage stage, List<Task> tasks, Task task) {
         Label title = new Label("Task Details");
         String s = String.format("[%s]", task.getStatus() ? "Completed" : "Incomplete");
         Label status = new Label(s);
-        
+
         HBox header = new HBox(30);
         header.getChildren().addAll(title, status);
-        
+
         Button titleEdit = new Button("Edit");
         titleEdit.setOnAction(e -> stage.setScene(editTitle(stage, tasks, task)));
 
@@ -64,7 +64,7 @@ public class EditTask {
 
         Button recurrenceEdit = new Button("Edit");
         recurrenceEdit.setOnAction(e -> stage.setScene(editRecurrence(stage, tasks, task)));
-        
+
         GridPane grid = new GridPane();
         int i = 0;
         grid.add(new Label("Title"), 0, i);
@@ -108,7 +108,7 @@ public class EditTask {
         back.setOnAction(e -> {
             stage.setScene(viewScene(stage, tasks));
         });
-        
+
         Button delete = new Button("Delete");
         delete.setOnAction(e -> {
             Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -120,25 +120,41 @@ public class EditTask {
                 if (response == ButtonType.OK) {
                     tasks.remove(task);
                     stage.setScene(viewScene(stage, tasks));
-                } 
+                }
             });
         });
-        
+
         HBox buttons = new HBox(20);
         buttons.getChildren().addAll(back, delete);
-        
+
         CheckBox mark = new CheckBox("Mark as Complete");
         mark.setSelected(task.getStatus());
         Label stateLabel = new Label();
         mark.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                task.setStatus(true);
+                // Check if all dependencies are completed
+                boolean allDependenciesCompleted = true;
+                for (Task dependency : task.getDependsOn()) {
+                    if (!dependency.getStatus()) {
+                        allDependenciesCompleted = false;
+                        break;
+                    }
+                }
+
+                if (allDependenciesCompleted) {
+                    task.setStatus(true);
+                    stateLabel.setText("Task marked as complete.");
+                } else {
+                    mark.setSelected(false); // Revert the checkbox
+                    stateLabel.setText("Cannot mark as complete: Some dependencies are incomplete.");
+                }
             } else {
                 task.setStatus(false);
+                stateLabel.setText("Task marked as incomplete.");
             }
             stage.setScene(showTaskDetails(stage, tasks, task));
         });
-        
+
         VBox root = new VBox(10);
         root.getChildren().addAll(header, grid, mark, stateLabel, buttons);
         stage.setTitle(task.getTitle());
@@ -172,7 +188,7 @@ public class EditTask {
         return new Scene(root, 1200, 1000);
     }
 
-    public static Scene editDescription(Stage stage, List<Task> tasks, Task task) 
+    public static Scene editDescription(Stage stage, List<Task> tasks, Task task)
     {
         Label l = new Label("Enter new description: ");
         Label result = new Label();
@@ -180,13 +196,13 @@ public class EditTask {
 
         Button submitButton = new Button("Submit");
         submitButton.setOnAction(event -> {
-            String input = textField.getText(); 
+            String input = textField.getText();
             task.setDescription(input);
             result.setText("Description changed!");
         });
 
         Button back = new Button("Back");
-        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
+        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task)));
 
         HBox buttons = new HBox(20);
         buttons.setAlignment(Pos.CENTER);
@@ -199,7 +215,7 @@ public class EditTask {
         return new Scene(root, 1200, 1000);
     }
 
-    public static Scene editDate(Stage stage, List<Task> tasks, Task task) 
+    public static Scene editDate(Stage stage, List<Task> tasks, Task task)
     {
         Label l = new Label("Enter new due date: ");
         Label result = new Label();
@@ -231,7 +247,7 @@ public class EditTask {
         return new Scene(root, 1200, 1000);
     }
 
-    public static Scene editCategory(Stage stage, List<Task> tasks, Task task) 
+    public static Scene editCategory(Stage stage, List<Task> tasks, Task task)
     {
         Label l = new Label("Choose an option:");
         String[] titles = {"work", "homework", "personal"};
@@ -240,12 +256,12 @@ public class EditTask {
 
         ListView<String> listView = new ListView<>();
         listView.setItems(items);
-        listView.setFixedCellSize(24); 
-        listView.setPrefHeight(listView.getFixedCellSize() * 3 + 2); 
+        listView.setFixedCellSize(24);
+        listView.setPrefHeight(listView.getFixedCellSize() * 3 + 2);
 
         Label selectedLabel = new Label();
         Label selected = new Label();
-        
+
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedLabel.setText("Selected: " + newValue);
             selected.setText(newValue);
@@ -258,8 +274,8 @@ public class EditTask {
         });
 
         Button back = new Button("Back");
-        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
-        
+        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task)));
+
         HBox buttons = new HBox(20);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(submitButton, back);
@@ -271,7 +287,7 @@ public class EditTask {
         return new Scene(root, 1200, 1000);
     }
 
-    public static Scene editPriority(Stage stage, List<Task> tasks, Task task) 
+    public static Scene editPriority(Stage stage, List<Task> tasks, Task task)
     {
         Label l = new Label("Choose an option:");
         String[] titles = {"low", "medium", "high"};
@@ -280,12 +296,12 @@ public class EditTask {
 
         ListView<String> listView = new ListView<>();
         listView.setItems(items);
-        listView.setFixedCellSize(24); 
-        listView.setPrefHeight(listView.getFixedCellSize() * 3 + 2); 
+        listView.setFixedCellSize(24);
+        listView.setPrefHeight(listView.getFixedCellSize() * 3 + 2);
 
         Label selectedLabel = new Label();
         Label selected = new Label();
-        
+
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedLabel.setText("Selected: " + newValue);
             selected.setText(newValue);
@@ -298,8 +314,8 @@ public class EditTask {
         });
 
         Button back = new Button("Back");
-        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
-        
+        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task)));
+
         HBox buttons = new HBox(20);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(submitButton, back);
@@ -310,7 +326,7 @@ public class EditTask {
         stage.setTitle("Edit Priority");
         return new Scene(root, 1200, 1000);
     }
-    
+
     public static Scene editDependency(Stage stage,List<Task> tasks, Task task) {
         VBox root = new VBox(10);
 
@@ -359,7 +375,7 @@ public class EditTask {
             tableView.getColumns().add(dateColumn);
             tableView.getColumns().add(statusColumn);
             ObservableList<Task> taskTable = FXCollections.observableArrayList(dependencies);
-            
+
             tableView.setRowFactory(tv -> {
                 javafx.scene.control.TableRow<Task> row = new javafx.scene.control.TableRow<>();
                 row.setOnMouseClicked(event -> {
@@ -370,7 +386,7 @@ public class EditTask {
                 });
                 return row;
             });
-            
+
             HBox display = new HBox(20);
             Label selectedLabel = new Label();
             Button delete = new Button("Delete");
@@ -383,25 +399,25 @@ public class EditTask {
                     selectedLabel.setText(newValue.getTitle() + " successfully removed from dependency list.");
                     delete.setVisible(false);
                 });
-                
+
             });
-            
+
             tableView.setItems(taskTable);
             tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
             tableView.setFixedCellSize(50);
             tableView.setMaxWidth(1500);
             tableView.setPrefHeight(dependencies.size() * 50 + 25);
-            
+
             display.getChildren().addAll(selectedLabel, delete);
             root.getChildren().addAll(tableView, display);
-            
+
         }
 
         Button add = new Button("Add new");
         add.setOnAction(e -> stage.setScene(addDepends(stage, tasks, task)));
 
         Button back = new Button("Back");
-        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
+        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task)));
 
         root.getChildren().addAll(add, back);
         stage.setTitle(task.getTitle() + " - Manage Dependencies");
@@ -456,8 +472,8 @@ public class EditTask {
 
         return new Scene(root, 1200, 1000);
     }
-    
-    public static Scene editRecurrence(Stage stage, List<Task> tasks, Task task) 
+
+    public static Scene editRecurrence(Stage stage, List<Task> tasks, Task task)
     {
         Label l = new Label("Choose an option:");
         String[] titles = {"none", "daily", "weekly", "monthly"};
@@ -466,12 +482,12 @@ public class EditTask {
 
         ListView<String> listView = new ListView<>();
         listView.setItems(items);
-        listView.setFixedCellSize(24); 
-        listView.setPrefHeight(listView.getFixedCellSize() * 4 + 2); 
+        listView.setFixedCellSize(24);
+        listView.setPrefHeight(listView.getFixedCellSize() * 4 + 2);
 
         Label selectedLabel = new Label();
         Label selected = new Label();
-        
+
         listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             selectedLabel.setText("Selected: " + newValue);
             selected.setText(newValue);
@@ -484,8 +500,8 @@ public class EditTask {
         });
 
         Button back = new Button("Back");
-        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task))); 
-        
+        back.setOnAction(event -> stage.setScene(showTaskDetails(stage, tasks, task)));
+
         HBox buttons = new HBox(20);
         buttons.setAlignment(Pos.CENTER);
         buttons.getChildren().addAll(submitButton, back);
@@ -496,7 +512,7 @@ public class EditTask {
         stage.setTitle("Edit Recurrence Interval");
         return new Scene(root, 1200, 1000);
     }
-    
+
     public static void editTask(List<Task> tasks, Scanner sc){
         view.lines();
         System.out.println("Task Edit");
@@ -504,12 +520,12 @@ public class EditTask {
         System.out.print("Enter task number to edit: ");
         int taskNumber = sc.nextInt();
         sc.nextLine();
-        
+
         if (taskNumber<1 || taskNumber>tasks.size()){
             System.out.println("Invalid task number");
             return;
         }
-        
+
         Dependency dependency = new Dependency();
         Task task = tasks.get(taskNumber-1);
         System.out.printf("\nTask: %s", task.getTitle());
@@ -528,23 +544,23 @@ public class EditTask {
                                > """);
             int choice = sc.nextInt();
             sc.nextLine();
-            
+
             switch (choice){
                 case 1:{
                     System.out.print("Enter new title: ");
                     String newTitle = sc.nextLine();
-                    
+
                     task.setTitle(newTitle);
                     System.out.println("Task title updated.");
                     break;}
-                
+
                 case 2:{
                     System.out.print("Enter new description: ");
                     String newDescription = sc.nextLine();
                     task.setDescription(newDescription);
                     System.out.println("Task description updated.");
                     break;}
-                    
+
                 case 3:{
                     System.out.print("Enter new due date: ");
                     String newDate = sc.nextLine();
@@ -556,27 +572,27 @@ public class EditTask {
                         System.out.println("Invalid date format.");
                     }
                     break;}
-                    
+
                 case 4:{
                     System.out.print("Enter new category: ");
                     String newCategory = sc.nextLine();
                     task.setCategory(newCategory);
                     System.out.println("Task category updated.");
                     break;}
-                    
+
                 case 5:{
                     System.out.print("Set priority: ");
                     String newPriority = sc.nextLine();
                     task.setPriority(newPriority);
                     System.out.println("Task priority updated.");
                     break;}
-                    
+
                 case 6:
                 {
                     dependency.manageDependencies(tasks, task, sc);
                     break;
                 }
-                    
+
                 case 7:
                 {
                     System.out.printf("Current recurrence interval: %s\n", task.getRecurrenceInterval());
@@ -585,7 +601,7 @@ public class EditTask {
                     String[] intervalList = {"none", "daily", "weekly", "monthly"};
                     for (String s : intervalList)
                     {
-                        if (interval.compareTo(s)==0) 
+                        if (interval.compareTo(s)==0)
                         {
                             task.setRecurrenceInterval(interval);
                             System.out.println("Recurrence interval changed successfully.");
@@ -598,12 +614,12 @@ public class EditTask {
                 }
                 case 8:
                     return;
-                    
+
                 default:
                     System.out.println("Invalid choice.");
             }
-            
-            
+
+
         }
     }
 
