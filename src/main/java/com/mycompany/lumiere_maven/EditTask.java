@@ -118,6 +118,10 @@ public class EditTask {
 
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
+                    // Remove the task from the dependency lists of all other tasks
+                    removeTaskFromDependencies(tasks, task);
+
+                    // Delete the task
                     tasks.remove(task);
                     stage.setScene(viewScene(stage, tasks));
                 }
@@ -160,6 +164,13 @@ public class EditTask {
         stage.setTitle(task.getTitle());
 
         return new Scene(root, 1200, 1000);
+    }
+
+    public static void removeTaskFromDependencies(List<Task> tasks, Task taskToDelete) {
+        for (Task task : tasks) {
+            List<Task> dependencies = task.getDependsOn();
+            dependencies.removeIf(dependency -> dependency.equals(taskToDelete));
+        }
     }
 
     public static Scene editTitle(Stage stage, List<Task> tasks, Task task) {
